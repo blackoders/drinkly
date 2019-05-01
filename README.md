@@ -1,5 +1,7 @@
 # Drinkly
 
+![welcome image]("./files/images/welcome.png")       
+
 **TODO: Add description**
 
 ## Installation
