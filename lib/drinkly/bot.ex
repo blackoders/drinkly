@@ -1,11 +1,9 @@
 defmodule Drinkly.Bot do
-
   import Drinkly.Commands
-  #replace with your bot_name here
+  # replace with your bot_name here
   @bot :drinkly_bot
 
   use ExGram.Bot, name: @bot
-
 
   command("echo")
   command("start")
@@ -17,7 +15,7 @@ defmodule Drinkly.Bot do
 
   require Logger
 
-  #Just for testing
+  # Just for testing
   def handle({:command, :echo, %{text: t}}, cnt) do
     cnt |> answer(t)
   end
@@ -28,6 +26,10 @@ defmodule Drinkly.Bot do
 
   def handle({:command, :features, %{chat: %{id: chat_id}}}, _cnt) do
     ExGram.send_message(chat_id, features(), parse_mode: "markdown")
+  end
+
+  def handle({:command, :about, %{chat: %{id: chat_id}}}, _cnt) do
+    ExGram.send_message(chat_id, about(), parse_mode: "markdown")
   end
 
   def handle({:command, :start, _}, cnt) do
@@ -43,5 +45,4 @@ defmodule Drinkly.Bot do
   def handle(msg, _) do
     IO.puts("Unknown message #{inspect(msg)}")
   end
-
 end
