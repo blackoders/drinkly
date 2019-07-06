@@ -1,4 +1,5 @@
 defmodule Drinkly.Commands do
+
   def description do
     "Drinkly Bot helps us to track the quantity of water we drink and remind us to drink water in right time."
   end
@@ -33,4 +34,5 @@ defmodule Drinkly.Commands do
   def about do
     "Drinkly Bot helps us to track the quantity of water we drink and remind us to drink water in right time."
   end
+
 end

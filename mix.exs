@@ -25,6 +25,7 @@ defmodule Drinkly.MixProject do
       {:ex_gram, "~> 0.6.0"},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
+      {:emojix, "~> 0.1.0"},
       # Only one of this
       {:jason, ">= 1.0.0"}
     ]
