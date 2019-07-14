@@ -1,11 +1,10 @@
 defmodule Drinkly.Commands do
-
   def description do
     "Drinkly Bot helps us to track the quantity of water we drink and remind us to drink water in right time."
   end
 
   def features do
-    data = "
+    "
     Features
     --------
 
@@ -35,4 +34,19 @@ defmodule Drinkly.Commands do
     "Drinkly Bot helps us to track the quantity of water we drink and remind us to drink water in right time."
   end
 
+  def add_email(email) do
+    """
+    Your Current Email: *#{email || "NULL"}*
+
+    Now Please Enter Your Email. 
+
+    *WARNING* *:warning:*
+    ~~~~~~
+    If email already exists, the *NEW* email overrides *OLD* one
+
+
+    Now Enter Your Email 
+    example: `hello@email.com`
+    """
+  end
 end

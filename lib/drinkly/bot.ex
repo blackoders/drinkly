@@ -6,8 +6,8 @@ defmodule Drinkly.Bot do
   use ExGram.Bot, name: @bot
 
   alias Drinkly.Users
-  alias Drinkly.Users.User
   alias Drinkly.Repo
+  alias Drinkly.Texts
 
   command("echo")
   command("start")
@@ -22,8 +22,27 @@ defmodule Drinkly.Bot do
   require Logger
 
   def handle({:command, command, %{from: user}} = data, cnt) do
-    spawn fn -> update_user_command(user.id, command) end
+    spawn(fn -> update_user_command(user.id, command) end)
     handle_command(data, cnt)
+  end
+
+  def handle({:text, _text, %{from: user}} = data, cnt) do
+    user = Users.get_user_by!(user_id: user.id)
+    user_command = user.command
+
+    text_function =
+      if user_command do
+        user_command |> String.to_atom()
+      else
+        nil
+      end
+
+    if text_function in Drinkly.module_functions(Texts) do
+      apply(Texts, text_function, [data])
+    else
+      text = emoji("Ohoo :bangbang: Please send valid command")
+      answer(cnt, text)
+    end
   end
 
   def handle_command({:command, :start, %{from: user}}, cnt) do
@@ -38,14 +57,6 @@ defmodule Drinkly.Bot do
         |> Enum.into(%{})
 
       Users.create_user(user)
-
-      # user_changeset =
-      #   User.changeset(%User{}, user)
-      # if user_changeset.valid? do
-      #   Drinkly.Repo.insert(user_changeset)
-      # else
-      #   IO.inspect user_changeset.errors
-      # end
     end)
 
     welcome_message = """
@@ -65,7 +76,7 @@ defmodule Drinkly.Bot do
     # ExGram.send_photo(chat_id, {:file, "files/images/welcome.png"})
   end
 
-  def handle_command({:command, :email, data}, cnt) do
+  def handle_command({:command, :email, data}, _cnt) do
     user = data.from
     chat = data.chat
     email = Users.get_user_email!(user.id)
@@ -97,20 +108,17 @@ defmodule Drinkly.Bot do
     ExGram.send_message(chat.id, text, options)
   end
 
-  def handle_command({:text, "add_email", data}, _) do
-    user = data.from
+  def handle_command({:command, :add_email, data}, _) do
     chat = data.chat
-    user = Repo.get_by!(Users.User, user_id: user.id)
+    user = data.from
+    email = Users.get_user_email!(user_id: user.id)
 
-    reply_markup = %{
-      force_reply: true,
-      selective: true
-    }
+    text =
+      email
+      |> add_email()
+      |> emoji()
 
-    options = [reply_markup: reply_markup]
-
-    text = emoji("Please enter a valid email:exclamation:")
-    ExGram.send_message(chat.id, text, options)
+    ExGram.send_message(chat.id, text, parse_mode: "markdown")
   end
 
   # Just for testing
@@ -147,7 +155,6 @@ defmodule Drinkly.Bot do
     command = to_string(command)
     user = Repo.get_by!(Users.User, user_id: id)
     Users.update_user(user, %{command: command})
-    user = Repo.get_by!(Users.User, user_id: id)
-    IO.inspect user
+    Repo.get_by!(Users.User, user_id: id)
   end
 end
