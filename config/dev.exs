@@ -6,4 +6,3 @@ config :drinkly, Drinkly.Repo,
   password: "postgres",
   hostname: "localhost"
 
-config :drinkly, ecto_repos: [Drinkly.Repo]
