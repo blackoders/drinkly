@@ -7,7 +7,7 @@ defmodule Drinkly.MixProject do
       version: "0.1.0",
       elixir: "~> 1.9.1",
       build_embedded: Mix.env == :prod,
-      alises: alises(),
+      aliases: aliases(),
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
