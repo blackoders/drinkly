@@ -11,6 +11,7 @@ defmodule Drinkly.Bot do
 
   command("echo")
   command("start")
+  command("help")
   command("subscribe")
   command("about")
   command("features")
@@ -124,6 +125,10 @@ defmodule Drinkly.Bot do
   # Just for testing
   def handle_command({:command, :echo, %{text: t}}, cnt) do
     cnt |> answer(t)
+  end
+
+  def handle_command({:command, :chat, %{chat: %{id: chat_id}}}, _cnt) do
+    ExGram.send_message(chat_id, help(), parse_mode: "markdown")
   end
 
   def handle_command({:command, :subscribe, %{chat: %{id: _chat_id}}}, cnt) do
