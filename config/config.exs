@@ -3,6 +3,7 @@
 use Mix.Config
 
 config :drinkly, ecto_repos: [Drinkly.Repo]
+config :ex_gram, token: "832510476:AAFnvWK6N0VAj6YDlolvbmgGfVUa5JFwDoA"
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
@@ -30,4 +31,3 @@ config :drinkly, ecto_repos: [Drinkly.Repo]
 # here (which is why it is important to import them last).
 #
 import_config "#{Mix.env()}.exs"
-import_config "secrets.exs"
