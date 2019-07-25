@@ -5,8 +5,9 @@ defmodule Drinkly.MixProject do
     [
       app: :drinkly,
       version: "0.1.0",
-      elixir: "~> 1.9.2",
+      elixir: "~> 1.9.1",
       build_embedded: Mix.env == :prod,
+      alises: alises(),
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -30,5 +31,11 @@ defmodule Drinkly.MixProject do
       # Only one of this
       {:jason, ">= 1.0.0"}
     ]
+  end
+
+  defp aliases do
+    ["ecto.setup": ["ecto.create", "ecto.migrate"],
+     "ecto.reset": ["ecto.drop", "ecto.setup"],
+     "test": ["ecto.create --quiet", "ecto.migrate", "test"]]
   end
 end
