@@ -1,13 +1,11 @@
 use Mix.Config
 
 config :drinkly, Drinkly.Repo,
-  ssl: false,
-  pool_size: 15
-  # url: {:system, "HEROKU_DB_URL"},
-
-  # database: "drinkly_dev",
-  # username: "postgres",
-  # password: "postgres",
-  # hostname: "localhost"
+  ssl: true,
+  pool_size: 15,
+  database: "d4mncl7664siva",
+  username: "pedfekzzlqxabq",
+  password: "ed2aaae757306430b21ece62aa5f58222c79442f835b29b1a381188aef4f0f55",
+  hostname: "ec2-174-129-227-205.compute-1.amazonaws.com"
 
 # write production grade code here
