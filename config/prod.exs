@@ -3,7 +3,8 @@ use Mix.Config
 config :drinkly, Drinkly.Repo,
   ssl: true,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-  url: System.get_env("DATABASE_URL")
+  url: System.get_env("DATABASE_URL"),
+  database: ""
   # port: 5432,
   # database: "d4mncl7664siva",
   # username: "pedfekzzlqxabq",
