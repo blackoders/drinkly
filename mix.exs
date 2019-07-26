@@ -25,17 +25,17 @@ defmodule Drinkly.MixProject do
   defp deps do
     [
       {:ex_gram, "~> 0.6.0"},
-      {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"},
+      {:ecto_sql, "~> 3.1.6"},
+      {:postgrex, "~> 0.15.0"},
       {:emojix, "~> 0.1.0"},
       # Only one of this
-      {:jason, ">= 1.0.0"}
+      {:jason, "~> 1.0"}
     ]
   end
 
   defp aliases do
     [
-      "ecto.setup": ["ecto.create", "ecto.migrate"],
+      "run": ["ecto.create", "ecto.migrate", "run --no-halt"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
      test: ["ecto.create --quiet", "ecto.migrate", "test"]]
   end
