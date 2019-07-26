@@ -16,6 +16,7 @@ defmodule Drinkly.Bot do
   command("about")
   command("features")
   command("email")
+  command("help")
   command("add_email")
 
   middleware(ExGram.Middleware.IgnoreUsername)
@@ -141,6 +142,10 @@ defmodule Drinkly.Bot do
 
   def handle_command({:command, :about, %{chat: %{id: chat_id}}}, _cnt) do
     ExGram.send_message(chat_id, about(), parse_mode: "markdown")
+  end
+
+  def handle_command({:command, :help, %{chat: %{id: chat_id}}}, _cnt) do
+    ExGram.send_message(chat_id, help(), parse_mode: "markdown")
   end
 
   def handle_command({:bot_message, from, msg}, %{name: name}) do

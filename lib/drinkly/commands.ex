@@ -31,7 +31,7 @@ defmodule Drinkly.Commands do
   end
 
   def about do
-    "Drinkly Bot helps us to track the quantity of water we drink and remind us to drink water in right time."
+    "Drinkly Bot helps us to track the quantity of water we drink and remind us to drink water in right time, but you have to tell when to remind in a day."
   end
 
   def add_email(email) do
@@ -52,13 +52,13 @@ defmodule Drinkly.Commands do
 
   def help do
     """
-    /start     - Welcome Message with an Image :)
-    /about     - Bot Description.
-    /echo      - Just an echo use like /echo I LOVE YOU.
-    /email     - It shows user email
-    /features  - List of Features of the Bot.
-    /help      - Display all commands with command description.
-    /add_email - Setting up email for sending reports
+    /start     - *Welcome Message with an Image :)*
+    /about     - *Bot Description.*
+    /echo      - *Just an echo use like /echo I LOVE YOU.*
+    /email     - *It shows user email*
+    /features  - *List of Features of the Bot.*
+    /help      - *Display all commands with command description.*
+    /add_email - *Setting up email for sending reports*
     """
   end
 end
