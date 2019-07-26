@@ -1,1 +1,1 @@
-release: MIX_ENV=prod elixir --sname drinkly_bot -S mix do deps.update --all, ecto.setup, run --no-halt
+release: MIX_ENV=prod mix do ecto.setup, run --no-halt
