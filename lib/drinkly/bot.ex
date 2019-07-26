@@ -1,13 +1,11 @@
 defmodule Drinkly.Bot do
-  import Drinkly.Commands
+  import Drinkly.{Commands, Helper}
   # replace with your bot_name here
   @bot :drinkly_bot
 
   use ExGram.Bot, name: @bot
 
-  alias Drinkly.Users
-  alias Drinkly.Repo
-  alias Drinkly.Texts
+  alias Drinkly.{Users, Repo, Texts, CallbackQuery}
 
   command("echo")
   command("start")
@@ -16,7 +14,6 @@ defmodule Drinkly.Bot do
   command("about")
   command("features")
   command("email")
-  command("help")
   command("add_email")
 
   middleware(ExGram.Middleware.IgnoreUsername)
@@ -42,9 +39,13 @@ defmodule Drinkly.Bot do
     if text_function in Drinkly.module_functions(Texts) do
       apply(Texts, text_function, [data])
     else
-      text = emoji("Ohoo :bangbang: Please send valid command")
+      text = emoji("Ohoo :bangbang: Please send valid command \n" <> help())
       answer(cnt, text)
     end
+  end
+
+  def handle({:callback_query, data}, _cnt) do
+    apply(CallbackQuery, :execute, [data])
   end
 
   def handle_command({:command, :start, %{from: user}}, cnt) do
@@ -86,20 +87,18 @@ defmodule Drinkly.Bot do
     keyboard_buttons =
       if email do
         [
-          %{text: "update_email"},
-          %{text: "remove_email"}
+          %{text: "Remove My Email", callback_data: "remove_email"}
         ]
       else
         [
-          %{text: "add_email"},
-          %{text: "remove_email"}
+          %{text: "Add Email", callback_data: "add_email"}
         ]
       end
 
     text = email || emoji(":x: No email to show !")
 
     reply_markup = %{
-      keyboard: [keyboard_buttons],
+      inline_keyboard: [keyboard_buttons],
       one_time_keyboard: true,
       resize_keyboard: true,
       selective: true
@@ -124,12 +123,26 @@ defmodule Drinkly.Bot do
   end
 
   # Just for testing
-  def handle_command({:command, :echo, %{text: t}}, cnt) do
-    cnt |> answer(t)
-  end
+  def handle_command({:command, :echo, %{text: text, chat: chat}}, cnt) do
+    if String.trim(text) == "" do
+      "Hello, Welcome !"
+    else
+      text
+    end
 
-  def handle_command({:command, :chat, %{chat: %{id: chat_id}}}, _cnt) do
-    ExGram.send_message(chat_id, help(), parse_mode: "markdown")
+    keyboard_buttons = [
+      %{text: text, callback_data: text}
+    ]
+
+    reply_markup = %{
+      inline_keyboard: [keyboard_buttons],
+      one_time_keyboard: true,
+      resize_keyboard: true
+    }
+
+    options = [reply_markup: reply_markup]
+
+    ExGram.send_message(chat.id, text, options)
   end
 
   def handle_command({:command, :subscribe, %{chat: %{id: _chat_id}}}, cnt) do
@@ -145,7 +158,7 @@ defmodule Drinkly.Bot do
   end
 
   def handle_command({:command, :help, %{chat: %{id: chat_id}}}, _cnt) do
-    ExGram.send_message(chat_id, help(), parse_mode: "markdown")
+    ExGram.send_message(chat_id, help())
   end
 
   def handle_command({:bot_message, from, msg}, %{name: name}) do
@@ -155,10 +168,6 @@ defmodule Drinkly.Bot do
 
   def handle_command(msg, _) do
     IO.puts("Unknown message #{inspect(msg)}")
-  end
-
-  def emoji(text) do
-    Emojix.replace_by_char(text)
   end
 
   def update_user_command(id, command) do

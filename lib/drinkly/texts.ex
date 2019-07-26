@@ -21,6 +21,6 @@ defmodule Drinkly.Texts do
         "INVALID EMAIL \nPlease enter valid email"
       end
 
-    Bot.send_message(chat_id, text)
+    Bot.send_message(chat_id, text, reply_markup: %{remove_keyboard: true})
   end
 end

@@ -5,4 +5,3 @@ config :drinkly, Drinkly.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost"
-

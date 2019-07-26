@@ -6,7 +6,7 @@ defmodule Drinkly.MixProject do
       app: :drinkly,
       version: "0.1.0",
       elixir: "~> 1.9.0",
-      build_embedded: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
       aliases: aliases(),
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -37,6 +37,7 @@ defmodule Drinkly.MixProject do
     [
       "drinkly.start": ["ecto.create", "ecto.migrate", "run --no-halt"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-     test: ["ecto.create --quiet", "ecto.migrate", "test"]]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+    ]
   end
 end

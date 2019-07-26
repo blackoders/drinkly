@@ -21,8 +21,21 @@ defmodule Drinkly.Users.User do
     |> cast(params, @cast_params)
     |> unique_constraint(:user_name)
     |> unique_constraint(:user_id)
-    |> update_change(:email, &String.downcase/1)
+    |> update_change(:email, &change_email/1)
     |> unique_constraint(:email)
     |> validate_required(@required_params)
+  end
+
+  defp change_email(nil) do
+    nil
+  end
+
+  defp change_email(email) do
+    email = String.trim(email)
+
+    case email do
+      "" -> nil
+      email -> String.downcase(email)
+    end
   end
 end
