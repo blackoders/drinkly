@@ -35,7 +35,7 @@ defmodule Drinkly.MixProject do
 
   defp aliases do
     [
-      "run": ["ecto.create", "ecto.migrate", "run --no-halt"],
+      "drinkly.start": ["ecto.create", "ecto.migrate", "run --no-halt"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
      test: ["ecto.create --quiet", "ecto.migrate", "test"]]
   end
