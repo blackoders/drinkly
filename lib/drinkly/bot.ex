@@ -9,6 +9,7 @@ defmodule Drinkly.Bot do
 
   command("echo")
   command("start")
+  command("remind")
   command("help")
   command("subscribe")
   command("about")
@@ -39,13 +40,26 @@ defmodule Drinkly.Bot do
     if text_function in Drinkly.module_functions(Texts) do
       apply(Texts, text_function, [data])
     else
-      text = emoji("Ohoo :bangbang: Please send valid command \n" <> help())
+      text = emoji("Ohoo :bangbang: Please send valid command \n command /help to see available commands")
       answer(cnt, text)
     end
   end
 
   def handle({:callback_query, data}, _cnt) do
     apply(CallbackQuery, :execute, [data])
+  end
+
+  def handle_command({:command, :remind, data}, _cnt) do
+    chat = data.chat
+    time = data.text |> String.trim()
+    time = if time == "", do: "5sec", else: time
+
+    time = Drinkly.Parser.parse_time(time)
+
+    Task.start(fn -> send(Drinkly.Reminder, {:remind, time, chat.id}) end)
+
+    ExGram.send_message(chat.id, "Reminder has been set \n Focus on Work \n
+      We'll remind you when to drink water")
   end
 
   def handle_command({:command, :start, %{from: user}}, cnt) do

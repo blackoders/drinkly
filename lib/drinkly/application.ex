@@ -11,6 +11,7 @@ defmodule Drinkly.Application do
     # List all child processes to be supervised
     children = [
       Drinkly.Repo,
+      Drinkly.Reminder,
       ExGram,
       {Drinkly.Bot, [method: :polling, token: token]}
 
