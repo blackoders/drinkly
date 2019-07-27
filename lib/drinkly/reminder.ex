@@ -8,7 +8,7 @@ defmodule Drinkly.Reminder do
   use GenServer
 
   def start_link(_) do
-    GenServer.start_link(__MODULE__, nil, [name: __MODULE__])
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
   def init(_) do
@@ -25,13 +25,13 @@ defmodule Drinkly.Reminder do
     *It's Time to Drink Water*
     *Stay Healthy*
     """
+
     message = emoji(text)
-    ExGram.send_message(chat_id, message, [parse_mode: "markdown"])
+    ExGram.send_message(chat_id, message, parse_mode: "markdown")
     {:noreply, state}
   end
 
   defp schedule_remind_job(time, chat_id) do
     Process.send_after(self(), {:send_message, chat_id}, time)
   end
-
 end

@@ -10,6 +10,7 @@ defmodule Drinkly.Bot do
   command("echo")
   command("start")
   command("remind")
+  command("set_glass_size")
   command("help")
   command("subscribe")
   command("about")
@@ -40,7 +41,11 @@ defmodule Drinkly.Bot do
     if text_function in Drinkly.module_functions(Texts) do
       apply(Texts, text_function, [data])
     else
-      text = emoji("Ohoo :bangbang: Please send valid command \n command /help to see available commands")
+      text =
+        emoji(
+          "Ohoo :bangbang: Please send valid command \n command /help to see available commands"
+        )
+
       answer(cnt, text)
     end
   end
