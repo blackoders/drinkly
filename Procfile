@@ -1,1 +1,1 @@
-release: MIX_ENV=prod mix drinkly.start
+web: MIX_ENV=prod -S mix drinkly.start
