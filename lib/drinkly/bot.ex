@@ -123,7 +123,7 @@ defmodule Drinkly.Bot do
   end
 
   # Just for testing
-  def handle_command({:command, :echo, %{text: text, chat: chat}}, cnt) do
+  def handle_command({:command, :echo, %{text: text, chat: chat}}, _cnt) do
     if String.trim(text) == "" do
       "Hello, Welcome !"
     else
@@ -145,8 +145,27 @@ defmodule Drinkly.Bot do
     ExGram.send_message(chat.id, text, options)
   end
 
-  def handle_command({:command, :subscribe, %{chat: %{id: _chat_id}}}, cnt) do
-    answer(cnt, "We will take care of you... :)")
+  def handle_command({:command, :subscribe, %{chat: %{id: chat_id}}}, _cnt) do
+    keyboard_buttons = [
+      [
+        %{text: "Every Hour", callback_data: "subscribe_every_hour"},
+        %{text: "Monthly", callback_data: "subscribe_every_month"},
+        %{text: "Daily", callback_data: "subscribe_daily"}
+      ],
+      [%{text: "Mute Subscription", callback_data: "subscribe_mute"}],
+      [%{text: "Show Subscription", callback_data: "subscribe_show"}]
+    ]
+
+    text = emoji(":tickets: *Choose one of the Following Plans*")
+
+    reply_markup = %{
+      inline_keyboard: keyboard_buttons,
+      resize_keyboard: true
+    }
+
+    options = [reply_markup: reply_markup, parse_mode: "markdown"]
+
+    ExGram.send_message(chat_id, text, options)
   end
 
   def handle_command({:command, :features, %{chat: %{id: chat_id}}}, _cnt) do

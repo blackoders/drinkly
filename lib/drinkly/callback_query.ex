@@ -56,6 +56,6 @@ defmodule Drinkly.CallbackQuery do
   end
 
   def execute(%{id: id}) do
-    ExGram.answer_callback_query(id, text: emoji("All Is Well :bang:"))
+    ExGram.answer_callback_query(id, text: "All is Well !!")
   end
 end

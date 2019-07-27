@@ -59,6 +59,7 @@ defmodule Drinkly.Commands do
     /features  - List of Features of the Bot
     /help      - Display all commands with command description
     /add_email - Setting up email for sending reports
+    /subsribe  - Showing Subscription Alerts
     """
   end
 end
