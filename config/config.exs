@@ -4,6 +4,11 @@ use Mix.Config
 
 config :drinkly, ecto_repos: [Drinkly.Repo]
 config :ex_gram, token: "832510476:AAFnvWK6N0VAj6YDlolvbmgGfVUa5JFwDoA"
+config :puppeteer_pdf, exec_path: "/usr/local/bin/puppeteer-pdf"
+
+config :drinkly,
+  report_html_template: Path.absname("templates/daily_report.html"),
+  report_output_folder: Path.absname("pdfs")
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this

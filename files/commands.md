@@ -1,11 +1,20 @@
-start - Welcome Message with an Image :)
-about - Bot Description.
-echo - Just an echo use like /echo I LOVE YOU.
-email - It shows options for show, update, add for email
-features - List of Features of the Bot.
-help - Display all commands with command description.
-add_email - Setting up email for sending reports
-subsribe - Showing Subscription Alerts
-
-
+about - bot description.
+echo - just echo I LOVE YOU
+email - shows your email
+setemail - change your email for reports
+features - features of what bot can do
+setreminder - set a reminder 
+listreminders - get a list of your reminders
+deletereminder - display reminders to remove
+drink - add a drink to your daily
+listdrinks - show Top 10 Drinks
+todaydrinks - shows today drinks
+setglass - change your glass size
+settarget - change your daily target
+setunit - change your unit of measurement
+showmetrics - display all metrics
+help - Commands & Description
+report - get your drinking report
+start - Initiating Bot :)
+subscribe - add a subscription
 

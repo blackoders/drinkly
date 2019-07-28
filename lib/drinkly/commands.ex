@@ -34,7 +34,7 @@ defmodule Drinkly.Commands do
     "Drinkly Bot helps us to track the quantity of water we drink and remind us to drink water in right time, but you have to tell when to remind in a day."
   end
 
-  def add_email(email) do
+  def setemail(email) do
     """
     Your Current Email: *#{email || "NULL"}*
 
@@ -52,14 +52,41 @@ defmodule Drinkly.Commands do
 
   def help do
     """
-    /start     - Welcome Message with an Image :)
-    /about     - Bot Description
-    /echo      - Just an echo use like /echo I LOVE YOU
-    /email     - It shows user email
-    /features  - List of Features of the Bot
-    /help      - Display all commands with command description
-    /add_email - Setting up email for sending reports
-    /subsribe  - Showing Subscription Alerts
+    I can help you track quantity of water 
+    you drink and remind you to drink water
+    in right time.
+
+    You can control me by sending these 
+    commands:
+
+    /about - Bot Description.
+    /echo - just echo I LOVE YOU
+    /email - Shows your email
+    /setemail - change your email for reports
+    /features - Bot Features
+
+    *Reminders*
+    /setreminder - set a reminder
+    /listreminders - get a list of your reminders
+    /deletereminder - display reminders to remove
+
+    *Drinks*
+    /drink - add a drink to your today
+    /listdrinks - show Top 10 Drinks
+    /todaydrinks - shows today drinks
+
+    *Metrics*
+    /setglass - change your glass size
+    /settarget - change your daily target
+    /setunit - change your unit of measurement
+    /showmetrics - display all metrics
+
+    *Others*
+    /help - Commands & Description
+    /report - get your drinking report
+    /start - Initiating Bot :)
+    /subscribe - add a subscription
+
     """
   end
 end

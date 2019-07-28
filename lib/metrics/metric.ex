@@ -9,7 +9,7 @@ defmodule Drinkly.Metrics.Metric do
     field(:unit, :string)
     field(:daily_target, :string)
     field(:total, :string)
-    belongs_to(:user, User)
+    belongs_to(:user, User, foreign_key: :user_id, references: :user_id)
     timestamps()
   end
 

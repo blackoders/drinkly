@@ -2,6 +2,11 @@ defmodule Drinkly.CallbackQuery do
   import Drinkly.Helper
 
   alias Drinkly.Users
+  alias Drinkly.Drinks
+  alias Drinkly.Helper
+
+  @report_html_template Application.get_env(:drinkly, :report_html_template) ||
+                          Path.absname("templates/daily_report.html")
 
   def execute(%{data: "remove_email", id: id, message: message}) do
     keyboard_buttons = [
@@ -52,10 +57,73 @@ defmodule Drinkly.CallbackQuery do
   end
 
   def execute(%{data: "cancel_remove_email", id: id}) do
-    ExGram.answer_callback_query(id, text: emoji(":ok: We don't touch Your email :ok_hand_tone2:"))
+    ExGram.answer_callback_query(id,
+      text: emoji(":ok: Whte don't touch Your email :ok_hand_tone2:")
+    )
+  end
+
+  def execute(%{data: "today_report", id: id, message: message, from: user}) do
+    chat_id = message.chat.id
+    user_id = user.id
+
+    text = """
+    Your *Daily Water Drinking* report is in progress
+    We'll send a `PDF` file after generation
+    """
+
+    ExGram.send_message(chat_id, text, parse_mode: "markdown")
+    ExGram.answer_callback_query(id)
+    ExGram.delete_message(chat_id, message.message_id)
+
+    drinks =
+      user_id
+      |> Drinks.today()
+      |> Enum.with_index(1)
+
+    Task.start(fn ->
+      now = Helper.now() |> to_string()
+      name = user.first_name
+      type = "today_report"
+      extension = "html"
+
+      file_name = Enum.join([name, type, now], "_")
+
+      report_output_file_name = "#{file_name}.#{extension}"
+
+      report_string = EEx.eval_file(@report_html_template, drinks: drinks, user_name: name)
+
+      html_template_file =
+        "templates"
+        |> Path.absname()
+        |> Path.join(report_output_file_name)
+
+      {:ok, report_file} = File.open(html_template_file, [:write])
+
+      IO.write(report_file, report_string)
+      File.close(report_file)
+
+      pdf_file_path = Path.absname("pdfs") |> Path.join("#{file_name}.pdf")
+
+      PuppeteerPdf.Generate.from_file(html_template_file, pdf_file_path)
+
+      ExGram.send_document(chat_id, {:file, pdf_file_path})
+
+      File.rm(pdf_file_path)
+      File.rm(html_template_file)
+    end)
   end
 
   def execute(%{id: id}) do
-    ExGram.answer_callback_query(id, text: "All is Well !!")
+    text = """
+    :tools: Development in Progress...:bangbang:
+
+    :construction_worker_tone2::construction_worker_tone3: Our Engineers are working...
+
+    :pray::pray: Sorry for inconvience :pray::pray:
+
+    :sun_with_face: Have a Great Day :)
+    """
+
+    ExGram.answer_callback_query(id, text: emoji(text), show_alert: true)
   end
 end

@@ -3,7 +3,7 @@ defmodule Drinkly.Texts do
   alias Drinkly.Users
   import Drinkly.Validator
 
-  def add_email({:text, email, data}) do
+  def setemail({:text, email, data}) do
     chat_id = data.chat.id
 
     text =
@@ -18,7 +18,7 @@ defmodule Drinkly.Texts do
             "Error in adding email: #{email}"
         end
       else
-        "INVALID EMAIL \nPlease enter valid email"
+        "INVALID EMAIL \n Please enter valid email"
       end
 
     Bot.send_message(chat_id, text, reply_markup: %{remove_keyboard: true})

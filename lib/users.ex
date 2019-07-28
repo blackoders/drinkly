@@ -7,7 +7,9 @@ defmodule Drinkly.Users do
   require Logger
 
   alias Drinkly.Repo
+  alias Drinkly.Helper
   alias Drinkly.Users.User
+  alias Drinkly.Drinks.Drink
 
   @doc """
   Returns the list of users.
@@ -145,8 +147,8 @@ defmodule Drinkly.Users do
 
   ## Examples
 
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
+  iex> change_user(user)
+  %Ecto.Changeset{source: %User{}}
 
   """
   def change_user(%User{} = user) do
