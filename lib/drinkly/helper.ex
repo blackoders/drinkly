@@ -18,7 +18,6 @@ defmodule Drinkly.Helper do
   end
 
   def generate_report(drinks, user, report_html_template, type) do
-
     now = now() |> to_string()
     name = user.first_name
     extension = "html"
@@ -44,11 +43,24 @@ defmodule Drinkly.Helper do
     PuppeteerPdf.Generate.from_file(html_template_file, pdf_file_path)
 
     {pdf_file_path, html_template_file}
-
   end
 
+  @doc """
+  Four possibel ways of deleting a message
+  """
   def delete_message({:ok, message}) do
     ExGram.delete_message(message.chat.id, message.message_id)
   end
 
+  def delete_message({chat_id, message_id}) do
+    ExGram.delete_message(chat_id, message_id)
+  end
+
+  def delete_message(message) when is_map(message) do
+    ExGram.delete_message(message.chat.id, message.message_id)
+  end
+
+  def delete_message(chat_id, message_id) do
+    ExGram.delete_message(chat_id, message_id)
+  end
 end

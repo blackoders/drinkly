@@ -3,6 +3,7 @@ defmodule Drinkly.CallbackQuery do
 
   alias Drinkly.Users
   alias Drinkly.Drinks
+  alias Drinkly.Metrics
   alias Drinkly.Helper
 
   @report_html_template Application.get_env(:drinkly, :report_html_template) ||
@@ -62,6 +63,14 @@ defmodule Drinkly.CallbackQuery do
     )
   end
 
+  def execute(%{data: "set_unit_ounce", id: id, message: message}) do
+    set_unit("ounce", id, message)
+  end
+
+  def execute(%{data: "set_unit_liter", id: id, message: message}) do
+    set_unit("liter", id, message)
+  end
+
   def execute(%{data: "today_report", id: id, message: message, from: user}) do
     chat_id = message.chat.id
     user_id = user.id
@@ -81,12 +90,13 @@ defmodule Drinkly.CallbackQuery do
       |> Enum.with_index(1)
 
     Task.start(fn ->
-      report_files = Helper.generate_report(drinks, user, @report_html_template, "today_report") 
+      report_files = Helper.generate_report(drinks, user, @report_html_template, "today_report")
       send_report(chat_id, report_files)
     end)
   end
 
-  #keep this always at the end as it used for global matching
+  # -----O-----
+  # keep this always at the end as it used for global matching
   def execute(%{id: id}) do
     text = """
     :tools: Development in Progress...:bangbang:
@@ -101,10 +111,30 @@ defmodule Drinkly.CallbackQuery do
     ExGram.answer_callback_query(id, text: emoji(text), show_alert: true)
   end
 
+  defp set_unit(unit, id, message) do
+    text =
+      case Metrics.update!(message.chat.id, unit: "ounce") do
+        {:ok, _} ->
+          """
+          *:white_check_mark:* Your unit of measurement has been set to *#{unit}*
+          /showmetrics to see your current metrics
+          """
+
+        {:error, _changeset} ->
+          """
+          *:x:* Looks like something went wrong
+          Try again /setunit
+          """
+      end
+
+    ExGram.answer_callback_query(id)
+    Helper.delete_message(message)
+    ExGram.send_message(message.chat.id, emoji(text), parse_mode: "markdown")
+  end
+
   defp send_report(chat_id, {pdf_file_path, html_template_file}) do
     ExGram.send_document(chat_id, {:file, pdf_file_path})
     File.rm(pdf_file_path)
     File.rm(html_template_file)
   end
-
 end

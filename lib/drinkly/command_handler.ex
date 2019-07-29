@@ -43,7 +43,6 @@ defmodule Drinkly.CommandHandler do
     """
 
     ExGram.send_message(chat.id, emoji(text), parse_mode: "markdown")
-
   end
 
   def handle_command({:command, :start, %{from: user, chat: chat}}, _cnt) do
@@ -172,6 +171,7 @@ defmodule Drinkly.CommandHandler do
       [%{text: "OZ - Ounce", callback_data: "set_unit_ounce"}],
       [%{text: "L - Liter", callback_data: "set_unit_liter"}]
     ]
+
     text = emoji(":tickets: *Choose one of the Following unit of measurement*")
 
     reply_markup = %{
@@ -180,7 +180,7 @@ defmodule Drinkly.CommandHandler do
     }
 
     options = [reply_markup: reply_markup, parse_mode: "markdown"]
-    ExGram.send_message(chat_id, text, options) 
+    ExGram.send_message(chat_id, text, options)
   end
 
   def handle_command({:command, :features, %{chat: %{id: chat_id}}}, _cnt) do
@@ -194,7 +194,6 @@ defmodule Drinkly.CommandHandler do
   def handle_command({:command, :help, %{chat: %{id: chat_id}}}, _cnt) do
     ExGram.send_message(chat_id, help())
   end
-
 
   def handle_command({:bot_message, from, msg}, %{name: name}) do
     Logger.info("Message from bot #{inspect(from)} to #{inspect(name)}  : #{inspect(msg)}")
