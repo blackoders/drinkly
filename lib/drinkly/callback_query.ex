@@ -81,38 +81,12 @@ defmodule Drinkly.CallbackQuery do
       |> Enum.with_index(1)
 
     Task.start(fn ->
-      now = Helper.now() |> to_string()
-      name = user.first_name
-      type = "today_report"
-      extension = "html"
-
-      file_name = Enum.join([name, type, now], "_")
-
-      report_output_file_name = "#{file_name}.#{extension}"
-
-      report_string = EEx.eval_file(@report_html_template, drinks: drinks, user_name: name)
-
-      html_template_file =
-        "templates"
-        |> Path.absname()
-        |> Path.join(report_output_file_name)
-
-      {:ok, report_file} = File.open(html_template_file, [:write])
-
-      IO.write(report_file, report_string)
-      File.close(report_file)
-
-      pdf_file_path = Path.absname("pdfs") |> Path.join("#{file_name}.pdf")
-
-      PuppeteerPdf.Generate.from_file(html_template_file, pdf_file_path)
-
-      ExGram.send_document(chat_id, {:file, pdf_file_path})
-
-      File.rm(pdf_file_path)
-      File.rm(html_template_file)
+      report_files = Helper.generate_report(drinks, user, @report_html_template, "today_report") 
+      send_report(chat_id, report_files)
     end)
   end
 
+  #keep this always at the end as it used for global matching
   def execute(%{id: id}) do
     text = """
     :tools: Development in Progress...:bangbang:
@@ -126,4 +100,11 @@ defmodule Drinkly.CallbackQuery do
 
     ExGram.answer_callback_query(id, text: emoji(text), show_alert: true)
   end
+
+  defp send_report(chat_id, {pdf_file_path, html_template_file}) do
+    ExGram.send_document(chat_id, {:file, pdf_file_path})
+    File.rm(pdf_file_path)
+    File.rm(html_template_file)
+  end
+
 end

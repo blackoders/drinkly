@@ -8,7 +8,15 @@ defmodule Drinkly.Reminder do
   use GenServer
 
   def start_link(_) do
-    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+    case GenServer.start_link(__MODULE__, nil, name: __MODULE__) do
+      {:ok, pid} ->
+        {:ok, pid}
+      {:error, {:already_started, pid}} ->
+        Process.link(pid)
+        {:ok, pid}
+      :ignore ->
+        :ignore
+    end
   end
 
   def init(_) do
