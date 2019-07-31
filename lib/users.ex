@@ -157,9 +157,8 @@ defmodule Drinkly.Users do
 
   def get_metric(user_id) do
     user_id
-    |> get_user!() 
-    |> Repo.preload(:metric) 
+    |> get_user!()
+    |> Repo.preload(:metric)
     |> Map.get(:metric)
   end
-
 end

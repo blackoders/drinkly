@@ -89,5 +89,4 @@ defmodule Drinkly.Commands do
 
     """
   end
-
 end

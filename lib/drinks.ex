@@ -24,8 +24,8 @@ defmodule Drinkly.Drinks do
     drinks_between_query =
       from(d in Drink,
         where:
-        fragment("?::date", d.inserted_at) >= ^start_date and
-        fragment("?::date", d.inserted_at) <= ^end_date
+          fragment("?::date", d.inserted_at) >= ^start_date and
+            fragment("?::date", d.inserted_at) <= ^end_date
       )
 
     user_id
@@ -61,7 +61,7 @@ defmodule Drinkly.Drinks do
       {:error, changeset} ->
         errors = changeset.errors
 
-        message = 
+        message =
           if errors[:unit] do
             """
             Invalid *unit* specified 
@@ -71,12 +71,11 @@ defmodule Drinkly.Drinks do
             ""
           end
 
-          if errors[:quantity] do
-            message <> "*quantity* should be *>0* "
-          else
-            message
-          end
+        if errors[:quantity] do
+          message <> "*quantity* should be *>0* "
+        else
+          message
+        end
     end
-
   end
 end

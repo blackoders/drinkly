@@ -183,6 +183,21 @@ defmodule Drinkly.CommandHandler do
     ExGram.send_message(chat_id, text, options)
   end
 
+  def handle_command({:command, :settarget, %{chat: %{id: chat_id}}}, _cnt) do
+    text = emoji(":ok: *Now enter your daily target* \n ex: 250ml, 5 ounce, 12l oz")
+    ExGram.send_message(chat_id, text, parse_mode: "markdown")
+  end
+
+  def handle_command({:command, :setglass, %{chat: %{id: chat_id}}}, _cnt) do
+    text = emoji(":ok: *Now enter your Glass Size* \n ex: 250ml, 5 ounce, 12l oz")
+    ExGram.send_message(chat_id, text, parse_mode: "markdown")
+  end
+
+  def handle_command({:command, :mydrinks, %{chat: %{id: chat_id}}}, _cnt) do
+    text = emoji(":ok: *Now enter your Glass Size* \n ex: 250ml, 5 ounce, 12l oz")
+    ExGram.send_message(chat_id, text, parse_mode: "markdown")
+  end
+
   def handle_command({:command, :drink, %{text: text, chat: %{id: chat_id}}}, _cnt) do
     if empty_string?(text) do
       text = """
@@ -198,18 +213,17 @@ defmodule Drinkly.CommandHandler do
   end
 
   def handle_command({:command, :showmetrics, %{chat: %{id: chat_id}}}, _cnt) do
+    metric = Users.get_metric(chat_id)
 
-    metric = 
-      Users.get_metric(chat_id)
-
-    message = 
+    message =
       if metric do
         Map.take(metric, [:glass_size, :unit, :daily_target])
+
         """
         <pre>
-        Glass Size    -- #{inspect metric.glass_size}
-        Unit          -- #{inspect metric.unit}
-        Daily Target  -- #{inspect metric.daily_target}
+        Glass Size    -- #{inspect(metric.glass_size)}
+        Unit          -- #{inspect(metric.unit)}
+        Daily Target  -- #{inspect(metric.daily_target)}
         </pre>
         """
       else
