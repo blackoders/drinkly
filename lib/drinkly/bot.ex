@@ -29,7 +29,7 @@ defmodule Drinkly.Bot do
   middleware(ExGram.Middleware.IgnoreUsername)
 
   def handle({:command, command, %{from: user}} = data, cnt) do
-    spawn(fn -> update_user_command(user.id, command) end)
+    spawn(fn -> Users.update_user_command(user.id, command) end)
     Drinkly.CommandHandler.handle_command(data, cnt)
   end
 
@@ -62,13 +62,5 @@ defmodule Drinkly.Bot do
 
   def handle({:callback_query, data}, _cnt) do
     apply(CallbackQuery, :execute, [data])
-  end
-
-  def update_user_command(user_id, command) do
-    command = to_string(command)
-
-    user_id
-    |> Users.get_user!()
-    |> Users.update_user(%{command: command})
   end
 end

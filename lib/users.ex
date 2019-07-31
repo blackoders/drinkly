@@ -161,4 +161,18 @@ defmodule Drinkly.Users do
     |> Repo.preload(:metric)
     |> Map.get(:metric)
   end
+
+  def update_user_command(user_id, command) do
+    command = to_string(command)
+
+    user_id
+    |> get_user!()
+    |> update_user(%{command: command})
+  end
+
+  def reset_user_command(user_id) do
+    user_id
+    |> get_user!()
+    |> update_user(%{command: ""})
+  end
 end

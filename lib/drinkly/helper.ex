@@ -1,4 +1,8 @@
 defmodule Drinkly.Helper do
+  @root_dir File.cwd!()
+  @files_dir Path.join(@root_dir, "files")
+  @commands_file Path.join(@files_dir, "commands.md")
+
   def emoji(text) do
     Emojix.replace_by_char(text)
   end
@@ -67,5 +71,34 @@ defmodule Drinkly.Helper do
   def empty_string?(string) do
     string = String.trim(string)
     string == ""
+  end
+
+  def get_bot_commands() do
+    file = Application.get_env(:drinly, :commands_file, @commands_file)
+
+    file
+    |> File.stream!()
+    |> Enum.map(&String.split(&1, "-", trim: true))
+    |> Enum.map(&List.first/1)
+    |> Enum.map(&String.trim/1)
+    |> Enum.map(&String.to_atom/1)
+  end
+
+  def get_progress_message(type \\ "command") do
+    message = """
+    We are sorry for disappointing now :(
+
+    This #{type} is under development :tools:.
+
+    Engineers are working on it :construction_worker:.
+
+    Happy to serve you :exclamation:
+
+    Please visit again :)
+
+    Thank you :pray:
+    """
+
+    Emojix.replace_by_char(message)
   end
 end

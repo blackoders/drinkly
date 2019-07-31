@@ -254,15 +254,24 @@ defmodule Drinkly.CommandHandler do
   end
 
   # Keep this last as it matches always
-  def handle_command({:command, _unknown_command, data}, _cnt) do
+  def handle_command({:command, unknown_command, data}, _cnt) do
+    chat_id = data.chat.id
+    Task.start(Users, :reset_user_command, [chat_id])
+
+    bot_commands = get_bot_commands()
+
     text =
-      emoji("""
-      Ohoo :bangbang:
+      if unknown_command in bot_commands do
+        get_progress_message("command")
+      else
+        emoji("""
+        Ohoo :bangbang:
 
-      Looks like you sent an unrecognized command
+        Looks like you sent an unrecognized command
 
-      #{help()}
-      """)
+        #{help()}
+        """)
+      end
 
     ExGram.send_message(data.chat.id, text, parse_mode: "markdown")
   end

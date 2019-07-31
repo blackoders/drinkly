@@ -17,4 +17,3 @@ help - Commands & Description
 report - get your drinking report
 start - Initiating Bot :)
 subscribe - add a subscription
-
