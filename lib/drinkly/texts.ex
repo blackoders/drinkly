@@ -23,4 +23,11 @@ defmodule Drinkly.Texts do
 
     Bot.send_message(chat_id, text, reply_markup: %{remove_keyboard: true})
   end
+
+  def drink({:text, text, data}) do
+    chat_id = data.chat.id
+      message = Drinkly.Drinks.create_drink(chat_id, text)
+
+    Bot.send_message(chat_id, message <> "/drink", parse_mode: "markdown")
+  end
 end

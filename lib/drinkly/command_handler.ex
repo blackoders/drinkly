@@ -183,6 +183,34 @@ defmodule Drinkly.CommandHandler do
     ExGram.send_message(chat_id, text, options)
   end
 
+  def handle_command({:command, :drink, %{text: text, chat: %{id: chat_id}}}, _cnt) do
+    if empty_string?(text) do
+      text = """
+      Now enter the amount of water :droplet:
+      """
+
+      text = emoji(text)
+      ExGram.send_message(chat_id, text, parse_mode: "markdown")
+    else
+      message = Drinkly.Drinks.create_drink(chat_id, text)
+      ExGram.send_message(chat_id, message, parse_mode: "markdown")
+    end
+  end
+
+  def handle_command({:command, :show_metrics, %{text: text, chat: %{id: chat_id}}}, _cnt) do
+    if empty_string?(text) do
+      text = """
+      Now enter the amount of water :droplet:
+      """
+
+      text = emoji(text)
+      ExGram.send_message(chat_id, text, parse_mode: "markdown")
+    else
+      message = Drinkly.Drinks.create_drink(chat_id, text)
+      ExGram.send_message(chat_id, message, parse_mode: "markdown")
+    end
+  end
+
   def handle_command({:command, :features, %{chat: %{id: chat_id}}}, _cnt) do
     ExGram.send_message(chat_id, features(), parse_mode: "markdown")
   end

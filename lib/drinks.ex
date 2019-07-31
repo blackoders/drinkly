@@ -24,8 +24,8 @@ defmodule Drinkly.Drinks do
     drinks_between_query =
       from(d in Drink,
         where:
-          fragment("?::date", d.inserted_at) >= ^start_date and
-            fragment("?::date", d.inserted_at) <= ^end_date
+        fragment("?::date", d.inserted_at) >= ^start_date and
+        fragment("?::date", d.inserted_at) <= ^end_date
       )
 
     user_id
@@ -34,7 +34,49 @@ defmodule Drinkly.Drinks do
     |> Map.get(:drinks)
   end
 
-  def create_drink(%Drink{} = drink) do
+  def create_drink!(drink) do
     Repo.insert!(drink)
+  end
+
+  def create_drink(drink) do
+    Repo.insert(drink)
+  end
+
+  def create_drink(user_id, text) do
+    text = String.trim(text)
+    {quantity, unit} = Integer.parse(text)
+    unit = String.trim(unit)
+
+    user = Users.get_user!(user_id)
+
+    drink =
+      user
+      |> Ecto.build_assoc(:drinks)
+      |> Drink.changeset(%{quantity: quantity, unit: unit})
+
+    case create_drink(drink) do
+      {:ok, _} ->
+        " *Drink Added Successfully :)*"
+
+      {:error, changeset} ->
+        errors = changeset.errors
+
+        message = 
+          if errors[:unit] do
+            """
+            Invalid *unit* specified 
+            Supported only *[ml, l, liter, ounce, oz]*
+            """
+          else
+            ""
+          end
+
+          if errors[:quantity] do
+            message <> "*quantity* should be *>0* "
+          else
+            message
+          end
+    end
+
   end
 end

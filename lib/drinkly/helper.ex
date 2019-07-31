@@ -63,4 +63,9 @@ defmodule Drinkly.Helper do
   def delete_message(chat_id, message_id) do
     ExGram.delete_message(chat_id, message_id)
   end
+
+  def empty_string?(string) do
+    string = String.trim(string)
+    string == ""
+  end
 end
