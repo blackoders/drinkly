@@ -113,7 +113,7 @@ defmodule Drinkly.CallbackQuery do
 
   defp set_unit(unit, id, message) do
     text =
-      case Metrics.update!(message.chat.id, unit: "ounce") do
+      case Metrics.update!(message.chat.id, unit: unit) do
         {:ok, _} ->
           """
           *:white_check_mark:* Your unit of measurement has been set to *#{unit}*

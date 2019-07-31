@@ -201,15 +201,23 @@ defmodule Drinkly.CommandHandler do
 
     metric = 
       Users.get_metric(chat_id)
-      |> Map.take([:glass_size, :unit, :daily_target])
 
-    message = """
-    <pre>
-    Glass Size    -- #{metric.glass_size}
-    Unit          -- #{metric.unit}
-    Daily Target  -- #{metric.daily_target}
-    </pre>
-    """
+    message = 
+      if metric do
+        Map.take(metric, [:glass_size, :unit, :daily_target])
+        """
+        <pre>
+        Glass Size    -- #{inspect metric.glass_size}
+        Unit          -- #{inspect metric.unit}
+        Daily Target  -- #{inspect metric.daily_target}
+        </pre>
+        """
+      else
+        """
+        No Metric had been set 
+        Use /setunit /setglass /settarget
+        """
+      end
 
     ExGram.send_message(chat_id, message, parse_mode: "html")
   end

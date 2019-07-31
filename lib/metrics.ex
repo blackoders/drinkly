@@ -26,7 +26,7 @@ defmodule Drinkly.Metrics do
   end
 
   def create_metric(user, metrics) when is_map(user) do
-    metric = Ecto.build_assoc(user, metrics)
+    metric = Ecto.build_assoc(user, :metric, metrics)
     Repo.insert(metric)
   end
 
