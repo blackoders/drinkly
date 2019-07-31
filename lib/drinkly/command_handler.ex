@@ -36,9 +36,9 @@ defmodule Drinkly.CommandHandler do
     Task.start(fn -> send(Drinkly.Reminder, {:remind, time_milli_seconds, chat.id}) end)
 
     text = """
-    :alarm_clock: 
+    :alarm_clock:
     Reminder - *#{time}* has been updated
-    *Focus on Your Work...* 
+    *Focus on Your Work...*
     We'll remind you after *#{time}* to drink water *:droplet:*
     """
 
@@ -60,7 +60,7 @@ defmodule Drinkly.CommandHandler do
     end)
 
     welcome_message = """
-    Hurray :bangbang: 
+    Hurray :bangbang:
     Welcome to Drinkly Bot :smiley:
 
     This Bot is under development :tools:.
@@ -197,18 +197,21 @@ defmodule Drinkly.CommandHandler do
     end
   end
 
-  def handle_command({:command, :show_metrics, %{text: text, chat: %{id: chat_id}}}, _cnt) do
-    if empty_string?(text) do
-      text = """
-      Now enter the amount of water :droplet:
-      """
+  def handle_command({:command, :showmetrics, %{chat: %{id: chat_id}}}, _cnt) do
 
-      text = emoji(text)
-      ExGram.send_message(chat_id, text, parse_mode: "markdown")
-    else
-      message = Drinkly.Drinks.create_drink(chat_id, text)
-      ExGram.send_message(chat_id, message, parse_mode: "markdown")
-    end
+    metric = 
+      Users.get_metric(chat_id)
+      |> Map.take([:glass_size, :unit, :daily_target])
+
+    message = """
+    <pre>
+    Glass Size    -- #{metric.glass_size}
+    Unit          -- #{metric.unit}
+    Daily Target  -- #{metric.daily_target}
+    </pre>
+    """
+
+    ExGram.send_message(chat_id, message, parse_mode: "html")
   end
 
   def handle_command({:command, :features, %{chat: %{id: chat_id}}}, _cnt) do

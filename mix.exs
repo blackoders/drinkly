@@ -29,6 +29,7 @@ defmodule Drinkly.MixProject do
       {:postgrex, "~> 0.15.0"},
       {:emojix, "~> 0.1.0"},
       {:puppeteer_pdf, "~> 1.0.3"},
+      {:scribe, "~> 0.10"},
       # Only one of this
       {:jason, "~> 1.0"}
     ]

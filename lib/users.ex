@@ -154,4 +154,12 @@ defmodule Drinkly.Users do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  def get_metric(user_id) do
+    user_id
+    |> get_user!() 
+    |> Repo.preload(:metric) 
+    |> Map.get(:metric)
+  end
+
 end
