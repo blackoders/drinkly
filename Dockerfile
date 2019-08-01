@@ -2,13 +2,13 @@ FROM archlinux/base:latest
 FROM elixir:1.9.1 as build
 # FROM node:10.16.1
 
-COPY . .
-
 #packman setup
-RUN pacman -Syyu --noconfirm
-RUN pacman-db-upgrade
-RUN pacman -S --noconfirm nodejs wkhtmltopdf
+RUN ./pacman -Syyu --noconfirm
+RUN ./pacman-db-upgrade
+RUN ./pacman -S --noconfirm nodejs wkhtmltopdf
 #command to build & release app 
+
+COPY . .
 RUN export MIX_ENV=prod && \
     npm i puppeteer-pdf -g \
     rm -Rf _build && \
