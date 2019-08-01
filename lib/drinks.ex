@@ -99,4 +99,15 @@ defmodule Drinkly.Drinks do
         end
     end
   end
+
+  def list_drinks(user_id, limit \\nil) do
+    user = Users.get_user!(user_id)
+
+    if limit do
+      Repo.preload(user, drinks: limit(Drink, ^limit)|> order_by([d], desc: d.inserted_at))
+    else
+      Repo.preload(user, drinks: order_by(Drink, [d], desc: d.inserted_at))
+    end
+  end
+
 end

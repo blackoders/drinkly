@@ -80,6 +80,6 @@ defmodule Drinkly.Texts do
     chat_id = data.chat.id
     message = Drinkly.Drinks.create_drink(chat_id, text)
 
-    Bot.send_message(chat_id, message <> "/drink", parse_mode: "markdown")
+    Bot.send_message(chat_id, message <> "/drinks", parse_mode: "markdown")
   end
 end

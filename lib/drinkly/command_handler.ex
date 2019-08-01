@@ -3,6 +3,7 @@ defmodule Drinkly.CommandHandler do
   require Logger
 
   alias Drinkly.Users
+  alias Drinkly.Drinks
 
   def handle_command({:command, :report, data}, _cnt) do
     chat = data.chat
@@ -203,15 +204,27 @@ defmodule Drinkly.CommandHandler do
     if empty_string?(text) do
       text = """
       Now enter the amount of water :droplet:
+      Ex _250ml 2l 8oz 3glass 12ounce_
       """
 
       text = emoji(text)
       ExGram.send_message(chat_id, text, parse_mode: "markdown")
     else
-      message = Drinkly.Drinks.create_drink(chat_id, text)
+      message = Drinks.create_drink(chat_id, text)
       ExGram.send_message(chat_id, message, parse_mode: "markdown")
     end
   end
+
+  def handle_command({:command, :todaydrinks, %{chat: %{id: chat_id}}}, _cnt) do
+    drinks = Drinkly.Drinks.today(chat_id)
+    send_drinks(drinks, chat_id)
+  end
+
+  def handle_command({:command, :drinks, %{chat: %{id: chat_id}}}, _cnt) do
+    drinks = Drinkly.Drinks.list_drinks(chat_id, 10).drinks
+    send_drinks(drinks, chat_id)
+  end
+
 
   def handle_command({:command, :showmetrics, %{chat: %{id: chat_id}}}, _cnt) do
     metric = Users.get_metric(chat_id)
@@ -274,5 +287,27 @@ defmodule Drinkly.CommandHandler do
       end
 
     ExGram.send_message(data.chat.id, text, parse_mode: "markdown")
+  end
+
+  defp send_drinks(drinks, chat_id) do
+    text =
+      if Enum.empty?(drinks) do
+        """
+        No Drinks to Show here
+        You can add one using /drink command
+        """
+      else
+        header = "Quantity - Unit - Date\n"
+
+        Enum.reduce(drinks, header, fn drink, acc ->
+          quantity = drink.quantity
+          unit = drink.unit
+          date = Timex.from_now(drink.inserted_at)
+          acc <> "\n#{quantity} - #{unit} - #{date}"
+        end) <> "\n \n use /drink to add a drink :)"
+
+      end
+
+    ExGram.send_message(chat_id, text)
   end
 end
