@@ -1,5 +1,5 @@
 FROM archlinux/base:latest
-FROM bitwalker/alpine-elixir:1.9.1 as build
+FROM elixir:1.9.1 as build
 # FROM node:10.16.1
 
 COPY . .
