@@ -62,6 +62,7 @@ defmodule Drinkly.CallbackQuery do
 
   def execute(%{data: "cancel_remove_email", id: id, message: message}) do
     ExGram.delete_message(message.chat.id, message.message_id)
+
     ExGram.answer_callback_query(id,
       text: emoji(":ok: We don't touch Your email :ok_hand_tone2:"),
       show_alert: true
@@ -79,7 +80,6 @@ defmodule Drinkly.CallbackQuery do
   end
 
   def execute(%{data: "today_report", id: id, message: message}) do
-
     user_id = chat_id = message.chat.id
     user = message.chat
 
@@ -173,7 +173,6 @@ defmodule Drinkly.CallbackQuery do
   end
 
   defp send_pre_report_message(message, chat_id, message_id, title) do
-
     text = """
     Your *#{title} Water Drinking* report is in progress
     We'll send a `PDF` file after generation
@@ -184,7 +183,6 @@ defmodule Drinkly.CallbackQuery do
     ExGram.answer_callback_query(message_id)
     ExGram.delete_message(chat_id, message.message_id)
   end
-
 
   defp set_unit(unit, id, message) do
     text =

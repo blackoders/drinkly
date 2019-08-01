@@ -19,6 +19,7 @@ defmodule Drinkly.Drinks do
     |> Repo.preload(drinks: today_drinks_query)
     |> Map.get(:drinks)
   end
+
   def week(user_id) do
     last_n_days(user_id, 7)
   end
@@ -36,8 +37,8 @@ defmodule Drinkly.Drinks do
   end
 
   def last_n_days(user_id, days) do
-    start_date=Timex.today()
-    end_date= Timex.shift(start_date, days: -days)
+    start_date = Timex.today()
+    end_date = Timex.shift(start_date, days: -days)
     between(user_id, start_date, end_date)
   end
 
@@ -100,14 +101,13 @@ defmodule Drinkly.Drinks do
     end
   end
 
-  def list_drinks(user_id, limit \\nil) do
+  def list_drinks(user_id, limit \\ nil) do
     user = Users.get_user!(user_id)
 
     if limit do
-      Repo.preload(user, drinks: limit(Drink, ^limit)|> order_by([d], desc: d.inserted_at))
+      Repo.preload(user, drinks: limit(Drink, ^limit) |> order_by([d], desc: d.inserted_at))
     else
       Repo.preload(user, drinks: order_by(Drink, [d], desc: d.inserted_at))
     end
   end
-
 end

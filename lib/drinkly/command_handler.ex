@@ -225,7 +225,6 @@ defmodule Drinkly.CommandHandler do
     send_drinks(drinks, chat_id)
   end
 
-
   def handle_command({:command, :showmetrics, %{chat: %{id: chat_id}}}, _cnt) do
     metric = Users.get_metric(chat_id)
 
@@ -305,7 +304,6 @@ defmodule Drinkly.CommandHandler do
           date = Timex.from_now(drink.inserted_at)
           acc <> "\n#{quantity} - #{unit} - #{date}"
         end) <> "\n \n use /drink to add a drink :)"
-
       end
 
     ExGram.send_message(chat_id, text)

@@ -37,7 +37,7 @@ defmodule Drinkly.MixProject do
 
   defp aliases do
     [
-      "drinkly.setup": [ "deps.get", "ecto.create", "ecto.migrate"],
+      "drinkly.setup": ["deps.get", "ecto.create", "ecto.migrate"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
