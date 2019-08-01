@@ -9,7 +9,8 @@ defmodule Drinkly.MixProject do
       build_embedded: Mix.env() == :prod,
       aliases: aliases(),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      releases: releases()
     ]
   end
 
@@ -29,7 +30,6 @@ defmodule Drinkly.MixProject do
       {:postgrex, "~> 0.15.0"},
       {:emojix, "~> 0.1.0"},
       {:puppeteer_pdf, "~> 1.0.3"},
-      {:scribe, "~> 0.10"},
       {:timex, "~> 3.5"},
       {:jason, "~> 1.0"}
     ]
@@ -37,9 +37,19 @@ defmodule Drinkly.MixProject do
 
   defp aliases do
     [
-      "drinkly.start": ["ecto.create", "ecto.migrate", "run --no-halt"],
+      "drinkly.setup": [ "deps.get", "ecto.create", "ecto.migrate"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
+    ]
+  end
+
+  defp releases() do
+    [
+      drinkly_linux: [
+        include_executables_for: [:unix],
+        applicatoins: [runtime_tools: :permanent],
+        path: "./drinkly_releases"
+      ]
     ]
   end
 end

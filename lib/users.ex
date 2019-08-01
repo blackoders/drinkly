@@ -7,9 +7,7 @@ defmodule Drinkly.Users do
   require Logger
 
   alias Drinkly.Repo
-  alias Drinkly.Helper
   alias Drinkly.Users.User
-  alias Drinkly.Drinks.Drink
 
   @doc """
   Returns the list of users.

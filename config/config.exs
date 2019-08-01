@@ -3,7 +3,7 @@
 use Mix.Config
 
 config :drinkly, ecto_repos: [Drinkly.Repo]
-config :ex_gram, token: "832510476:AAFnvWK6N0VAj6YDlolvbmgGfVUa5JFwDoA"
+config :ex_gram, token: System.get_env("TELEGRAM_DRINKlY_BOT_TOKEN")
 config :puppeteer_pdf, exec_path: "/usr/local/bin/puppeteer-pdf"
 
 config :drinkly,
