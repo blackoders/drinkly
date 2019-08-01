@@ -1,6 +1,6 @@
 FROM archlinux/base:latest
 FROM elixir:1.9.1 as build
-FROM node:10.16.1
+# FROM node:10.16.1
 
 #packman setup
 # RUN ./pacman -Syyu --noconfirm
@@ -10,8 +10,8 @@ FROM node:10.16.1
 
 COPY . .
 RUN export MIX_ENV=prod && \
-    npm i puppeteer-pdf -g \
-    rm -Rf _build && \
+    # npm i puppeteer-pdf -g \
+    # rm -Rf _build && \
     mix drinkly.setup && \
     mix release drinkly_linux
 
