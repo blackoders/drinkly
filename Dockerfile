@@ -10,7 +10,8 @@ RUN pacman-db-upgrade
 RUN pacman -S --noconfirm nodejs wkhtmltopdf
 #command to build & release app 
 RUN export MIX_ENV=prod && \
-    npm i puppeteer-pdf -g
+    npm i puppeteer-pdf -g \
+    rm -Rf _build && \
     mix drinkly.setup && \
     mix release drinkly_linux
 
