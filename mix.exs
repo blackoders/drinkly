@@ -30,7 +30,7 @@ defmodule Drinkly.MixProject do
       {:emojix, "~> 0.1.0"},
       {:puppeteer_pdf, "~> 1.0.3"},
       {:scribe, "~> 0.10"},
-      # Only one of this
+      {:timex, "~> 3.5"},
       {:jason, "~> 1.0"}
     ]
   end

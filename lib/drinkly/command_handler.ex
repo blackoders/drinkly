@@ -11,7 +11,8 @@ defmodule Drinkly.CommandHandler do
       [%{text: "Today Report", callback_data: "today_report"}],
       [%{text: "Yesterday Report", callback_data: "yesterday_report"}],
       [%{text: "Last 3 Days Report", callback_data: "last_3_days_report"}],
-      [%{text: "Last 5 Days Report", callback_data: "last_5_days_report"}]
+      [%{text: "Last 5 Days Report", callback_data: "last_5_days_report"}],
+      [%{text: "One Week", callback_data: "week"}]
     ]
 
     text = emoji(":tickets: *Choose one of the Following Plans*")
@@ -266,8 +267,7 @@ defmodule Drinkly.CommandHandler do
       else
         emoji("""
         Ohoo :bangbang:
-
-        Looks like you sent an unrecognized command
+        Looks like an unrecognized command !
 
         #{help()}
         """)

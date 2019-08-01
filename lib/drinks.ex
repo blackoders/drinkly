@@ -19,13 +19,34 @@ defmodule Drinkly.Drinks do
     |> Repo.preload(drinks: today_drinks_query)
     |> Map.get(:drinks)
   end
+  def week(user_id) do
+    last_n_days(user_id, 7)
+  end
+
+  def yesterday(user_id) do
+    last_n_days(user_id, 1)
+  end
+
+  def last_3_days(user_id) do
+    last_n_days(user_id, 3)
+  end
+
+  def last_5_days(user_id) do
+    last_n_days(user_id, 5)
+  end
+
+  def last_n_days(user_id, days) do
+    start_date=Timex.today()
+    end_date= Timex.shift(start_date, days: -days)
+    between(user_id, start_date, end_date)
+  end
 
   def between(user_id, start_date, end_date) do
     drinks_between_query =
       from(d in Drink,
         where:
-          fragment("?::date", d.inserted_at) >= ^start_date and
-            fragment("?::date", d.inserted_at) <= ^end_date
+          fragment("?::date", d.inserted_at) <= ^start_date and
+            fragment("?::date", d.inserted_at) >= ^end_date
       )
 
     user_id

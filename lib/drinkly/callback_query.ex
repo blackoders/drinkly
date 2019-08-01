@@ -28,7 +28,9 @@ defmodule Drinkly.CallbackQuery do
     ExGram.send_message(message.chat.id, "Are you sure about removing email", options)
   end
 
-  def execute(%{data: "confirm_remove_email", id: id, message: _message, from: user}) do
+  def execute(%{data: "confirm_remove_email", id: id, message: message, from: user}) do
+    ExGram.delete_message(message.chat.id, message.message_id)
+
     query_reply =
       try do
         Users.get_user_by!(user_id: user.id)
@@ -55,12 +57,17 @@ defmodule Drinkly.CallbackQuery do
       end
 
     ExGram.answer_callback_query(id, query_reply)
+    ExGram.send_message(message.chat.id, query_reply)
   end
 
-  def execute(%{data: "cancel_remove_email", id: id}) do
+  def execute(%{data: "cancel_remove_email", id: id, message: message}) do
+    ExGram.delete_message(message.chat.id, message.message_id)
     ExGram.answer_callback_query(id,
-      text: emoji(":ok: Whte don't touch Your email :ok_hand_tone2:")
+      text: emoji(":ok: We don't touch Your email :ok_hand_tone2:"),
+      show_alert: true
     )
+
+    ExGram.send_message(message.chat.id, "Cancelled Removing Email !")
   end
 
   def execute(%{data: "set_unit_ounce", id: id, message: message}) do
@@ -71,28 +78,75 @@ defmodule Drinkly.CallbackQuery do
     set_unit("liter", id, message)
   end
 
-  def execute(%{data: "today_report", id: id, message: message, from: user}) do
-    chat_id = message.chat.id
-    user_id = user.id
+  def execute(%{data: "today_report", id: id, message: message}) do
 
-    text = """
-    Your *Daily Water Drinking* report is in progress
-    We'll send a `PDF` file after generation
-    """
+    user_id = chat_id = message.chat.id
+    user = message.chat
 
-    ExGram.send_message(chat_id, text, parse_mode: "markdown")
-    ExGram.answer_callback_query(id)
-    ExGram.delete_message(chat_id, message.message_id)
+    send_pre_report_message(message, chat_id, id, "Today")
 
     drinks =
       user_id
       |> Drinks.today()
       |> Enum.with_index(1)
 
-    Task.start(fn ->
-      report_files = Helper.generate_report(drinks, user, @report_html_template, "today_report")
-      send_report(chat_id, report_files)
-    end)
+    create_report_task(drinks, user, "Today")
+  end
+
+  def execute(%{data: "yesterday_report", id: id, message: message}) do
+    user_id = chat_id = message.chat.id
+    user = message.chat
+
+    send_pre_report_message(message, chat_id, id, "Yesterday")
+
+    drinks =
+      user_id
+      |> Drinks.yesterday()
+      |> Enum.with_index(1)
+
+    create_report_task(drinks, user, "Yesterday")
+  end
+
+  def execute(%{data: "last_3_days_report", id: id, message: message}) do
+    user_id = chat_id = message.chat.id
+    user = message.chat
+
+    send_pre_report_message(message, chat_id, id, "Last 3 Days")
+
+    drinks =
+      user_id
+      |> Drinks.last_3_days()
+      |> Enum.with_index(1)
+
+    create_report_task(drinks, user, "Last 3 Days")
+  end
+
+  def execute(%{data: "last_5_days_report", id: id, message: message}) do
+    user_id = chat_id = message.chat.id
+    user = message.chat
+
+    send_pre_report_message(message, chat_id, id, "Last 3 Days")
+
+    drinks =
+      user_id
+      |> Drinks.last_3_days()
+      |> Enum.with_index(1)
+
+    create_report_task(drinks, user, "Last 3 Days")
+  end
+
+  def execute(%{data: "week", id: id, message: message}) do
+    user_id = chat_id = message.chat.id
+    user = message.chat
+
+    send_pre_report_message(message, chat_id, id, "Week")
+
+    drinks =
+      user_id
+      |> Drinks.week()
+      |> Enum.with_index(1)
+
+    create_report_task(drinks, user, "Week")
   end
 
   # -----O-----
@@ -110,6 +164,27 @@ defmodule Drinkly.CallbackQuery do
 
     ExGram.answer_callback_query(id, text: emoji(text), show_alert: true)
   end
+
+  defp create_report_task(drinks, user, title) do
+    Task.start(fn ->
+      report_files = Helper.generate_report(drinks, user, @report_html_template, "#{title}")
+      send_report(user.id, report_files)
+    end)
+  end
+
+  defp send_pre_report_message(message, chat_id, message_id, title) do
+
+    text = """
+    Your *#{title} Water Drinking* report is in progress
+    We'll send a `PDF` file after generation
+    Please wait ...
+    """
+
+    ExGram.send_message(chat_id, text, parse_mode: "markdown")
+    ExGram.answer_callback_query(message_id)
+    ExGram.delete_message(chat_id, message.message_id)
+  end
+
 
   defp set_unit(unit, id, message) do
     text =
