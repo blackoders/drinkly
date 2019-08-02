@@ -1,5 +1,5 @@
 FROM archlinux/base:latest
-FROM trenpixster/elixir:latest
+FROM elixir:latest
 
 RUN mkdir drinkly
 WORKDIR drinkly
@@ -15,7 +15,7 @@ COPY ./mix.exs /drinkly/mix.exs
 COPY ./mix.lock /drinkly/mix.lock
 
 
-RUN mix local.hex
+RUN yes | mix local.hex
 RUN mix deps.get
 
 COPY ./ /drinkly
