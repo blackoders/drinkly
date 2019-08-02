@@ -14,7 +14,9 @@ WORKDIR drinkly
 COPY ./mix.exs /drinkly/mix.exs
 COPY ./mix.lock /drinkly/mix.lock
 
-RUN mix do deps.get
+
+RUN mix local.hex
+RUN mix deps.get
 
 COPY ./ /drinkly
 
@@ -23,7 +25,7 @@ ENV MIX_ENV prod
 
 EXPOSE 4000
 
-RUN mix do compile
+RUN mix compile
 RUN mix drinkly.setup
 RUN mix release drinkly_linux
 #
