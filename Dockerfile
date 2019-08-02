@@ -15,7 +15,7 @@ COPY ./mix.exs /drinkly/mix.exs
 COPY ./mix.lock /drinkly/mix.lock
 
 
-RUN yes | mix local.hex
+RUN echo y | mix local.hex
 RUN mix deps.get --force
 
 COPY ./ /drinkly
@@ -26,7 +26,7 @@ ENV MIX_ENV prod
 EXPOSE 4000
 EXPOSE 8080
 
-RUN  mix compile --force
+RUN  echo y | mix compile --force
 RUN  mix drinkly.setup
 RUN  mix release drinkly_linux
 #
