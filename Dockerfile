@@ -26,9 +26,9 @@ ENV MIX_ENV prod
 EXPOSE 4000
 EXPOSE 8080
 
-RUN mix compile
-RUN mix drinkly.setup
-RUN mix release drinkly_linux
+RUN yes | mix compile
+RUN yes | mix drinkly.setup
+RUN yes | mix release drinkly_linux
 #
 #
 #
