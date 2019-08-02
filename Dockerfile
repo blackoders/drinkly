@@ -1,5 +1,5 @@
 FROM archlinux/base:latest
-FROM elixir:latest
+FROM trenpixster/elixir:latest
 
 RUN mkdir drinkly
 WORKDIR drinkly
@@ -15,7 +15,7 @@ COPY ./mix.exs /drinkly/mix.exs
 COPY ./mix.lock /drinkly/mix.lock
 
 
-RUN mix local.hex
+RUN mix local.hex --noconfirm
 RUN mix deps.get
 
 COPY ./ /drinkly
@@ -24,6 +24,7 @@ ENV PORT 4000
 ENV MIX_ENV prod
 
 EXPOSE 4000
+EXPOSE 8080
 
 RUN mix compile
 RUN mix drinkly.setup
