@@ -15,7 +15,7 @@ COPY ./mix.exs /drinkly/mix.exs
 COPY ./mix.lock /drinkly/mix.lock
 
 
-RUN mix local.hex --noconfirm
+RUN mix local.hex
 RUN mix deps.get
 
 COPY ./ /drinkly
