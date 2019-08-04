@@ -14,6 +14,7 @@ defmodule Drinkly.Users.User do
     field(:command, :string)
     has_one(:metric, Metric, foreign_key: :user_id)
     has_many(:drinks, Drink, foreign_key: :user_id)
+    has_many(:subscriptions, Subscription, foreign_key: :user_id)
   end
 
   @required_params ~w(user_name)a

@@ -7,6 +7,7 @@ defmodule Drinkly.Application do
   use Application
 
   def start(_type, _args) do
+    create_ets_tables()
     token = Application.get_env(:ex_gram, :token)
     # List all child processes to be supervised
     children = [
@@ -32,5 +33,9 @@ defmodule Drinkly.Application do
         Logger.error("Error in Starting Drinkly Bot")
         Logger.error("#{inspect(error)}")
     end
+  end
+
+  defp create_ets_tables() do
+    :ets.new(:reminders, [:set, :public, :named_table, :duplicate_bag])
   end
 end

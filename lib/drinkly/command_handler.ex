@@ -31,18 +31,26 @@ defmodule Drinkly.CommandHandler do
   def handle_command({:command, :setreminder, data}, _cnt) do
     chat = data.chat
     time = data.text |> String.trim()
-    time = if time == "", do: "5sec", else: time
 
-    time_milli_seconds = Drinkly.Parser.parse_time(time)
+    text =
+      if time == "" do
+        """
+        :alarm_clock:
+        *Now Enter the time*
+        _Examples: 1h 2hr 30min 30m 10sec 10s_
+        """
+      else
+        time_milli_seconds = Drinkly.Parser.parse_time(time)
+        Task.start(fn -> send(Drinkly.Reminder, {:remind, time_milli_seconds, chat.id}) end)
 
-    Task.start(fn -> send(Drinkly.Reminder, {:remind, time_milli_seconds, chat.id}) end)
-
-    text = """
-    :alarm_clock:
-    Reminder - *#{time}* has been updated
-    *Focus on Your Work...*
-    We'll remind you after *#{time}* to drink water *:droplet:*
-    """
+        """
+        :alarm_clock:
+        Reminder - *#{time}* has been updated
+        *Focus on Your Work...*
+        We'll remind you after *#{time}* to drink water *:droplet:*
+        Use /myreminders to show your reminders
+        """
+      end
 
     ExGram.send_message(chat.id, emoji(text), parse_mode: "markdown")
   end
@@ -247,6 +255,51 @@ defmodule Drinkly.CommandHandler do
       end
 
     ExGram.send_message(chat_id, message, parse_mode: "html")
+  end
+
+  def handle_command({:command, :myreminders, %{chat: %{id: chat_id}}}, _cnt) do
+    {keyboard_buttons, text} =
+      case :ets.lookup(:reminders, chat_id) do
+        [] ->
+          text = """
+          You have no *Reminders* to show
+          user /setreminder to set the reminder
+          """
+
+          {nil, text}
+
+        reminders ->
+          keyboard_buttons =
+            reminders
+            |> Enum.chunk_every(2)
+            |> Enum.map(fn chunk ->
+              Enum.map(chunk, fn {_chat_id, reference, _timer, time} ->
+                seconds = div(time, 1000)
+                time = Drinkly.Convert.sec_to_str(seconds)
+                %{text: "after-@#{time}", callback_data: reference}
+              end)
+            end)
+
+          text = """
+          Click on the reminder
+          """
+
+          {keyboard_buttons, text}
+      end
+
+    options =
+      if keyboard_buttons do
+        reply_markup = %{
+          inline_keyboard: keyboard_buttons,
+          resize_keyboard: true
+        }
+
+        [reply_markup: reply_markup, parse_mode: "markdown"]
+      else
+        [parse_mode: "markdown"]
+      end
+
+    ExGram.send_message(chat_id, text, options)
   end
 
   def handle_command({:command, :features, %{chat: %{id: chat_id}}}, _cnt) do

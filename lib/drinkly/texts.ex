@@ -82,4 +82,26 @@ defmodule Drinkly.Texts do
 
     Bot.send_message(chat_id, message <> "/drinks", parse_mode: "markdown")
   end
+
+  def setreminder({:text, text, data}) do
+    chat_id = data.chat.id
+
+    time = String.trim(text)
+
+    time_milli_seconds = Drinkly.Parser.parse_time(time)
+
+    Task.start(fn -> send(Drinkly.Reminder, {:remind, time_milli_seconds, chat_id}) end)
+
+    message =
+      """
+      :alarm_clock:
+      Reminder - *#{time}* has been updated
+      *Focus on Your Work...*
+      We'll remind you after *#{time}* to drink water *:droplet:*
+      Use _/myreminders_ to show your reminders
+      """
+      |> emoji()
+
+    Bot.send_message(chat_id, message, parse_mode: "markdown")
+  end
 end
