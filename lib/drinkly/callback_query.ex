@@ -149,6 +149,70 @@ defmodule Drinkly.CallbackQuery do
     create_report_task(drinks, user, "Week")
   end
 
+  def execute(%{data: ";" <> calendar_data, id: id, message: message}) do
+    chat_id = message.chat.id
+    [action, year, month, day] = String.split(calendar_data, ";", trim: true)
+    year = String.to_integer(year)
+    month = String.to_integer(month)
+    day = String.to_integer(day)
+
+    {:ok, current_date} = Date.new(year, month, day)
+
+    ExGram.answer_callback_query(id)
+
+    case action do
+      "IGNORE" ->
+        :ok
+
+      "DAY" ->
+        Helper.delete_message(message)
+        ExGram.send_message(chat_id, message.text)
+
+      "PREV-MONTH" ->
+        present_date = Timex.shift(current_date, months: -1)
+
+        reply_markup = %{
+          inline_keyboard:
+            Drinkly.Calendar.create_calendar(present_date.year, present_date.month),
+          one_time_keyboard: true,
+          resize_keyboard: true,
+          selective: true
+        }
+
+        options = [
+          reply_markup: reply_markup,
+          chat_id: chat_id,
+          message_id: message.message_id,
+          inline_message_id: id
+        ]
+
+        ExGram.edit_message_reply_markup(options)
+
+      "NEXT-MONTH" ->
+        present_date = Timex.shift(current_date, months: 1)
+
+        reply_markup = %{
+          inline_keyboard:
+            Drinkly.Calendar.create_calendar(present_date.year, present_date.month),
+          one_time_keyboard: true,
+          resize_keyboard: true,
+          selective: true
+        }
+
+        options = [
+          reply_markup: reply_markup,
+          chat_id: chat_id,
+          message_id: message.message_id,
+          inline_message_id: id
+        ]
+
+        ExGram.edit_message_reply_markup(options)
+
+      _ ->
+        ExGram.answer_callback_query(id, text: emoji(":x: Somethig Went Wrong"), show_alert: true)
+    end
+  end
+
   # -----O-----
   # keep this always at the end as it used for global matching
   def execute(%{id: id}) do
@@ -190,7 +254,7 @@ defmodule Drinkly.CallbackQuery do
         {:ok, _} ->
           """
           *:white_check_mark:* Your unit of measurement has been set to *#{unit}*
-          /showmetrics to see your current metrics
+          Use /showmetrics to see your current metrics
           """
 
         {:error, _changeset} ->

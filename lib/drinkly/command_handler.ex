@@ -339,6 +339,17 @@ defmodule Drinkly.CommandHandler do
       end
 
     ExGram.send_message(data.chat.id, text, parse_mode: "markdown")
+
+    keyboard_buttons = Drinkly.Calendar.create_calendar()
+
+    reply_markup = %{
+      inline_keyboard: keyboard_buttons,
+      resize_keyboard: true
+    }
+
+    options = [reply_markup: reply_markup]
+
+    ExGram.send_message(data.chat.id, "My Calendar", options)
   end
 
   defp send_drinks(drinks, chat_id) do
