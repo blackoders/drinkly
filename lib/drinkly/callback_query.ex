@@ -162,11 +162,11 @@ defmodule Drinkly.CallbackQuery do
 
     case action do
       "IGNORE" ->
-        :ok
+        ExGram.answer_callback_query(id)
 
       "DAY" ->
         Helper.delete_message(message)
-        ExGram.send_message(chat_id, message.text)
+        ExGram.send_message(chat_id, to_string(current_date))
 
       "PREV-MONTH" ->
         present_date = Timex.shift(current_date, months: -1)
@@ -213,6 +213,79 @@ defmodule Drinkly.CallbackQuery do
     end
   end
 
+  def execute(%{data: "reminders" <> reference, id: id, message: message}) do
+    chat_id = message.chat.id
+
+    keyboard = [%{text: "Delete reminder", callback_data: "deletereminder#{reference}"}]
+
+    reply_markup = %{
+      inline_keyboard: [keyboard],
+      one_time_keyboard: true,
+      resize_keyboard: true,
+      selective: true
+    }
+
+    options = [
+      reply_markup: reply_markup
+    ]
+
+    ExGram.answer_callback_query(id)
+    Drinkly.Helper.delete_message(message)
+    IO.inspect("hello_baby")
+
+    ExGram.send_message(chat_id, "Select the action", options)
+    |> IO.inspect(label: "HELLO MAN")
+  end
+
+  def execute(%{data: "deletereminder" <> reference, id: id, message: message}) do
+    chat_id = message.chat.id
+
+    keyboard = [
+      %{text: "Confirm Delete Reminder", callback_data: "confirmdeletereminder#{reference}"}
+    ]
+
+    reply_markup = %{
+      inline_keyboard: [keyboard],
+      one_time_keyboard: true,
+      resize_keyboard: true,
+      selective: true
+    }
+
+    options = [
+      reply_markup: reply_markup
+    ]
+
+    ExGram.answer_callback_query(id)
+    Drinkly.Helper.delete_message(message)
+
+    text = """
+    One Step away to delete
+    Just Confirm by pressing the button
+    :warning: Once deleted cannot rollback
+    """
+
+    ExGram.send_message(chat_id, emoji(text), options)
+  end
+
+  def execute(%{data: "confirmdeletereminder" <> reference, id: id, message: message}) do
+    chat_id = message.chat.id
+    ExGram.answer_callback_query(id)
+    Drinkly.Helper.delete_message(message)
+
+    [{chat_id, _, timer, _} = reminder] =
+      :ets.match_object(:reminders, {chat_id, reference, :_, :_})
+
+    :ets.delete_object(:reminders, reminder)
+
+    Process.cancel_timer(timer)
+
+    text = """
+    :heavy_check_mark: Removed Reminder Successfully :)
+    """
+
+    ExGram.send_message(chat_id, emoji(text))
+  end
+
   # -----O-----
   # keep this always at the end as it used for global matching
   def execute(%{id: id}) do
@@ -254,7 +327,7 @@ defmodule Drinkly.CallbackQuery do
         {:ok, _} ->
           """
           *:white_check_mark:* Your unit of measurement has been set to *#{unit}*
-          Use /showmetrics to see your current metrics
+            Use /showmetrics to see your current metrics
           """
 
         {:error, _changeset} ->

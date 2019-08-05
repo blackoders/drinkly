@@ -24,8 +24,10 @@ defmodule Drinkly.Bot do
   command("showmetrics")
   command("deletereminder")
   command("myreminders")
+  command("listreminders")
   command("drink")
   command("drinks")
+  command("mydrinks")
   command("todaydrinks")
 
   middleware(ExGram.Middleware.IgnoreUsername)

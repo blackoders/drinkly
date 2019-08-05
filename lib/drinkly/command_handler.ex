@@ -257,7 +257,8 @@ defmodule Drinkly.CommandHandler do
     ExGram.send_message(chat_id, message, parse_mode: "html")
   end
 
-  def handle_command({:command, :myreminders, %{chat: %{id: chat_id}}}, _cnt) do
+  def handle_command({:command, command, %{chat: %{id: chat_id}}}, _cnt)
+      when command in [:listreminders, :myreminders, :deletereminder] do
     {keyboard_buttons, text} =
       case :ets.lookup(:reminders, chat_id) do
         [] ->
@@ -276,12 +277,12 @@ defmodule Drinkly.CommandHandler do
               Enum.map(chunk, fn {_chat_id, reference, _timer, time} ->
                 seconds = div(time, 1000)
                 time = Drinkly.Convert.sec_to_str(seconds)
-                %{text: "after-@#{time}", callback_data: reference}
+                %{text: "after-@#{time}", callback_data: "reminders" <> reference}
               end)
             end)
 
           text = """
-          Click on the reminder
+          Select the Reminder
           """
 
           {keyboard_buttons, text}
@@ -339,17 +340,6 @@ defmodule Drinkly.CommandHandler do
       end
 
     ExGram.send_message(data.chat.id, text, parse_mode: "markdown")
-
-    keyboard_buttons = Drinkly.Calendar.create_calendar()
-
-    reply_markup = %{
-      inline_keyboard: keyboard_buttons,
-      resize_keyboard: true
-    }
-
-    options = [reply_markup: reply_markup]
-
-    ExGram.send_message(data.chat.id, "My Calendar", options)
   end
 
   defp send_drinks(drinks, chat_id) do
