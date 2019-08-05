@@ -117,7 +117,6 @@ defmodule Drinkly.CommandHandler do
   end
 
   def handle_command({:command, :setemail, data}, _) do
-    IO.inspect("setemail")
     chat = data.chat
     user = data.from
     email = Users.get_user_email!(user_id: user.id)

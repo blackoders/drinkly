@@ -23,7 +23,6 @@ defmodule Drinkly.Reminder do
 
   def init(_) do
     :ets.match_object(:reminders, {:_, :_, :_})
-    |> IO.inspect()
     |> Enum.each(fn {chat_id, reference, time} ->
       time = Drinkly.Parser.parse_time(time)
       schedule_remind_job(chat_id, reference, time)

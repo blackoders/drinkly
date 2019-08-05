@@ -231,10 +231,8 @@ defmodule Drinkly.CallbackQuery do
 
     ExGram.answer_callback_query(id)
     Drinkly.Helper.delete_message(message)
-    IO.inspect("hello_baby")
 
     ExGram.send_message(chat_id, "Select the action", options)
-    |> IO.inspect(label: "HELLO MAN")
   end
 
   def execute(%{data: "deletereminder" <> reference, id: id, message: message}) do
