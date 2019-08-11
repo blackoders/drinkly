@@ -171,6 +171,6 @@ defmodule Drinkly.Users do
   def reset_user_command(user_id) do
     user_id
     |> get_user!()
-    |> update_user(%{command: ""})
+    |> update_user(%{command: nil})
   end
 end

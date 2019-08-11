@@ -15,12 +15,13 @@ defmodule Drinkly.Texts do
         case Users.update_user(user, %{email: email, command: nil}) do
           {:ok, user} ->
             "#{user.email} has been updated !!"
+            Users.reset_user_command(chat_id)
 
           {:error, _changeset} ->
             "Error in adding email: #{email}"
         end
       else
-        "INVALID EMAIL \n Please enter valid email"
+        "INVALID EMAIL \n Please enter valid email or /cancel"
       end
 
     Bot.send_message(chat_id, text, reply_markup: %{remove_keyboard: true})
@@ -40,6 +41,8 @@ defmodule Drinkly.Texts do
             *:white_check_mark:* Your Daily target has been set to *#{target}*
             /showmetrics to see your current metrics
             """
+
+            Users.reset_user_command(data.chat.id)
 
           {:error, _changeset} ->
             error_message
@@ -66,6 +69,8 @@ defmodule Drinkly.Texts do
             /showmetrics to see your current metrics
             """
 
+            Users.reset_user_command(data.chat.id)
+
           {:error, _changeset} ->
             error_message
         end
@@ -81,6 +86,7 @@ defmodule Drinkly.Texts do
     message = Drinkly.Drinks.create_drink(chat_id, text)
 
     Bot.send_message(chat_id, message <> "/drinks", parse_mode: "markdown")
+    Users.reset_user_command(chat_id)
   end
 
   def setreminder({:text, text, data}) do
@@ -102,6 +108,7 @@ defmodule Drinkly.Texts do
       """
       |> emoji()
 
+    Users.reset_user_command(chat_id)
     Bot.send_message(chat_id, message, parse_mode: "markdown")
   end
 end

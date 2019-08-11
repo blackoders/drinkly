@@ -58,6 +58,7 @@ defmodule Drinkly.CallbackQuery do
 
     ExGram.answer_callback_query(id, query_reply)
     ExGram.send_message(message.chat.id, query_reply)
+    Users.reset_user_command(message.chat.id)
   end
 
   def execute(%{data: "cancel_remove_email", id: id, message: message}) do
@@ -69,6 +70,7 @@ defmodule Drinkly.CallbackQuery do
     )
 
     ExGram.send_message(message.chat.id, "Cancelled Removing Email !")
+    Users.reset_user_command(message.chat.id)
   end
 
   def execute(%{data: "set_unit_ounce", id: id, message: message}) do
@@ -282,6 +284,7 @@ defmodule Drinkly.CallbackQuery do
     """
 
     ExGram.send_message(chat_id, emoji(text))
+    Users.reset_user_command(message.chat.id)
   end
 
   # -----O-----
@@ -317,6 +320,7 @@ defmodule Drinkly.CallbackQuery do
     ExGram.send_message(chat_id, text, parse_mode: "markdown")
     ExGram.answer_callback_query(message_id)
     ExGram.delete_message(chat_id, message.message_id)
+    Users.reset_user_command(message.chat.id)
   end
 
   defp set_unit(unit, id, message) do
@@ -338,6 +342,7 @@ defmodule Drinkly.CallbackQuery do
     ExGram.answer_callback_query(id)
     Helper.delete_message(message)
     ExGram.send_message(message.chat.id, emoji(text), parse_mode: "markdown")
+    Users.reset_user_command(message.chat.id)
   end
 
   defp send_report(chat_id, {pdf_file_path, html_template_file}) do

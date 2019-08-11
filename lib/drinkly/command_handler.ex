@@ -50,6 +50,8 @@ defmodule Drinkly.CommandHandler do
         We'll remind you after *#{time}* to drink water *:droplet:*
         Use /myreminders to show your reminders
         """
+
+        Users.reset_user_command(chat.id)
       end
 
     ExGram.send_message(chat.id, emoji(text), parse_mode: "markdown")
@@ -82,8 +84,8 @@ defmodule Drinkly.CommandHandler do
 
     message = Emojix.replace_by_char(welcome_message)
 
+    Users.reset_user_command(chat.id)
     ExGram.send_message(chat.id, message)
-    # ExGram.send_photo(chat_id, {:file, "files/images/welcome.png"})
   end
 
   def handle_command({:command, :email, data}, _cnt) do
@@ -202,9 +204,8 @@ defmodule Drinkly.CommandHandler do
     ExGram.send_message(chat_id, text, parse_mode: "markdown")
   end
 
-  def handle_command({:command, :mydrinks, %{chat: %{id: chat_id}}}, _cnt) do
-    text = emoji(":ok: *Now enter your Glass Size* \n ex: 250ml, 5 ounce, 12l oz")
-    ExGram.send_message(chat_id, text, parse_mode: "markdown")
+  def handle_command({:command, :mydrinks, data}, cnt) do
+    handle_command({:command, :drinks, data}, cnt)
   end
 
   def handle_command({:command, :drink, %{text: text, chat: %{id: chat_id}}}, _cnt) do
@@ -254,6 +255,7 @@ defmodule Drinkly.CommandHandler do
       end
 
     ExGram.send_message(chat_id, message, parse_mode: "html")
+    Users.reset_user_command(chat_id)
   end
 
   def handle_command({:command, command, %{chat: %{id: chat_id}}}, _cnt)
@@ -304,14 +306,39 @@ defmodule Drinkly.CommandHandler do
 
   def handle_command({:command, :features, %{chat: %{id: chat_id}}}, _cnt) do
     ExGram.send_message(chat_id, features(), parse_mode: "markdown")
+    Users.reset_user_command(chat_id)
   end
 
   def handle_command({:command, :about, %{chat: %{id: chat_id}}}, _cnt) do
     ExGram.send_message(chat_id, about(), parse_mode: "markdown")
+    Users.reset_user_command(chat_id)
+  end
+
+  def handle_command({:command, :cancel, %{chat: %{id: chat_id}}}, _cnt) do
+    user = Users.get_user!(chat_id)
+
+    message =
+      if command = user.command do
+        Users.reset_user_command(chat_id)
+
+        """
+        The command /#{command} has been cancelled. Anything else I can do for you?
+
+        Send /help for a list of commands. 
+        To learn more about *Drinkly* Bot, see https://drinkly.blackode.in
+        """
+      else
+        """
+        No active command to cancel. I wasn't doing anything anyway. Zzzzz...
+        """
+      end
+
+    ExGram.send_message(chat_id, message, parse_mode: "markdown")
   end
 
   def handle_command({:command, :help, %{chat: %{id: chat_id}}}, _cnt) do
     ExGram.send_message(chat_id, help())
+    Users.reset_user_command(chat_id)
   end
 
   def handle_command({:bot_message, from, msg}, %{name: name}) do
@@ -360,5 +387,6 @@ defmodule Drinkly.CommandHandler do
       end
 
     ExGram.send_message(chat_id, text)
+    Users.reset_user_command(chat_id)
   end
 end
