@@ -1,5 +1,5 @@
 FROM archlinux/base:latest
-FROM elixir:latest
+FROM elixir:1.9.0
 
 RUN mkdir drinkly
 WORKDIR drinkly
