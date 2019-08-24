@@ -1,6 +1,6 @@
 # [Drinkly](https://t.me/drinkly_bot)
 
-[![welcome image](files/images/welcome.png)](https://t.me/drinkly_bot)
+[![welcome image](priv/assets/images/welcome.png)](https://t.me/drinkly_bot)
 
 [Drinkly Bot ](https://t.me/drinkly_bot)  helps us to track the quantity of water we drink and remind us to drink water in right time.
 

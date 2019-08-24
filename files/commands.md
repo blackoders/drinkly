@@ -1,7 +1,6 @@
 about - bot description.
 deletereminder - display reminders to remove
 drink - add a drink to your daily
-echo - just echo I LOVE YOU
 email - shows your email
 features - features of what bot can do
 help - Commands & Description
@@ -19,3 +18,4 @@ showmetrics - display all metrics
 start - Initiating Bot :)
 subscribe - add a subscription
 todaydrinks - shows today drinks
+cancel - cancel the current operation
