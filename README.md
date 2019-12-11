@@ -1,4 +1,4 @@
-# [Drinkly](https://t.me/drinkly_bot)
+[# Drinkly](https://t.me/drinkly_bot)
 
 [![welcome image](priv/assets/images/welcome.png)](https://t.me/drinkly_bot)
 

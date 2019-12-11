@@ -14,5 +14,6 @@ defmodule Drinkly.Convert do
     ["#{w} wk", "#{d} d", "#{h} hr", "#{m} min", "#{s} sec"]
     |> Enum.reject(fn str -> String.starts_with?(str, "0") end)
     |> Enum.join(", ")
+
   end
 end
