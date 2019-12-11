@@ -1,14 +1,21 @@
 FROM archlinux/base:latest
-FROM elixir:1.9.0
+# FROM elixir:1.9.4
+FROM trenpixster/elixir:latest
 
-RUN mkdir drinkly
-WORKDIR drinkly
-# FROM node:10.16.1
 
 #packman setup
 # RUN ./pacman -Syyu --noconfirm
 # RUN ./pacman-db-upgrade
 # RUN ./pacman -S --noconfirm nodejs wkhtmltopdf
+
+RUN mkdir drinkly
+WORKDIR drinkly
+FROM node:10.16.1
+
+# packman setup
+RUN ./pacman -Syyu --noconfirm
+RUN ./pacman-db-upgrade
+RUN ./pacman -S --noconfirm nodejs wkhtmltopdf
 #command to build & release app 
 
 COPY ./mix.exs /drinkly/mix.exs
