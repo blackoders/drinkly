@@ -5,7 +5,7 @@ defmodule Drinkly.MixProject do
     [
       app: :drinkly,
       version: "0.1.0",
-      elixir: "~> 1.8.2",
+      elixir: "~> 1.9.4",
       build_embedded: Mix.env() == :prod,
       aliases: aliases(),
       start_permanent: Mix.env() == :prod,
