@@ -48,7 +48,7 @@ defmodule Drinkly.MixProject do
     [
       drinkly_linux: [
         include_executables_for: [:unix],
-        applicatoins: [runtime_tools: :permanent],
+        applications: [runtime_tools: :permanent],
         path: Path.absname("drinkly_releases")
       ]
     ]
