@@ -173,4 +173,16 @@ defmodule Drinkly.Users do
     |> get_user!()
     |> update_user(%{command: nil})
   end
+
+  def exist?(%{user_id: id}) do
+    exist?(id)
+  end
+
+  def exist?(%{id: id}) do
+    exist?(id)
+  end
+
+  def exist?(id) do
+    !! Repo.get(User, id)
+  end
 end

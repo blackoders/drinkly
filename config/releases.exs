@@ -1,7 +1,7 @@
 use Mix.Config
 
 config :drinkly, Drinkly.Repo,
-  ssl: true,
+  ssl: false,
   queue_target: 10000,
   pool_size: 4,
   port: System.get_env("DR_PORT"),

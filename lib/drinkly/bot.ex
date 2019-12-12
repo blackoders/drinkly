@@ -37,9 +37,22 @@ defmodule Drinkly.Bot do
     Drinkly.CommandHandler.handle_command(data, cnt)
   end
 
+  def handle({:command, :start, %{from: _user}} = data, cnt) do
+      Drinkly.CommandHandler.handle_command(data, cnt)
+  end
+
   def handle({:command, command, %{from: user}} = data, cnt) do
-    spawn(fn -> Users.update_user_command(user.id, command) end)
-    Drinkly.CommandHandler.handle_command(data, cnt)
+    if Users.exist?(user) do
+      spawn(fn -> Users.update_user_command(user.id, command) end)
+      Drinkly.CommandHandler.handle_command(data, cnt)
+    else
+      text = """
+      Welcome to Drinkly Bot !
+      You need to run /start command for set up
+      Thank You :)
+      """
+      answer(cnt, text)
+    end
   end
 
   def handle({:text, _text, %{from: user}} = data, cnt) do

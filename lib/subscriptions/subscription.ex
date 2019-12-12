@@ -3,6 +3,7 @@ defmodule Drinkly.Subscriptions.Subscription do
 
   import Ecto.Changeset
   alias __MODULE__
+  alias Users.User
 
   @primary_key {:subscription_id, :integer, [auto_generate: false]}
   schema "subscriptions" do

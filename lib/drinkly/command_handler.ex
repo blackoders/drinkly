@@ -5,6 +5,39 @@ defmodule Drinkly.CommandHandler do
   alias Drinkly.Users
   alias Drinkly.Drinks
 
+  def handle_command({:command, :start, %{from: user, chat: chat}}, _cnt) do
+    if ! Users.exist?(user) do
+      spawn(fn ->
+        user =
+          user
+          |> Enum.map(fn
+            {:id, id} -> {:user_id, id}
+            {:username, id} -> {:user_name, id}
+            rest -> rest
+          end)
+          |> Enum.into(%{})
+
+        Users.create_user(user)
+        Users.reset_user_command(chat.id)
+      end)
+    end
+
+    welcome_message = """
+    Hurray :bangbang:
+    Welcome to Drinkly Bot :smiley:
+
+    This Bot is under development :tools:.
+
+    Engineers are working on it :construction_worker:.
+
+    Happy to serve you :exclamation:
+    """
+
+    message = Emojix.replace_by_char(welcome_message)
+
+    ExGram.send_message(chat.id, message)
+  end
+
   def handle_command({:command, :report, data}, _cnt) do
     chat = data.chat
 
@@ -55,37 +88,6 @@ defmodule Drinkly.CommandHandler do
       end
 
     ExGram.send_message(chat.id, emoji(text), parse_mode: "markdown")
-  end
-
-  def handle_command({:command, :start, %{from: user, chat: chat}}, _cnt) do
-    spawn(fn ->
-      user =
-        user
-        |> Enum.map(fn
-          {:id, id} -> {:user_id, id}
-          {:username, id} -> {:user_name, id}
-          rest -> rest
-        end)
-        |> Enum.into(%{})
-
-      Users.create_user(user)
-    end)
-
-    welcome_message = """
-    Hurray :bangbang:
-    Welcome to Drinkly Bot :smiley:
-
-    This Bot is under development :tools:.
-
-    Engineers are working on it :construction_worker:.
-
-    Happy to serve you :exclamation:
-    """
-
-    message = Emojix.replace_by_char(welcome_message)
-
-    Users.reset_user_command(chat.id)
-    ExGram.send_message(chat.id, message)
   end
 
   def handle_command({:command, :email, data}, _cnt) do
