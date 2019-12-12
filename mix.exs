@@ -40,7 +40,7 @@ defmodule Drinkly.MixProject do
     [
       "drinkly.setup": ["deps.get", "ecto.create", "ecto.migrate"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "release_drinkly": ["deps.clean --all", "drinkly.setup", "release drinkly_linux"],
+      release_drinkly: ["deps.clean --all", "drinkly.setup", "release drinkly_linux"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
