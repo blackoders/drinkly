@@ -25,7 +25,9 @@ defmodule Drinkly.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_gram, "~> 0.6.0"},
+      {:ex_gram, "~> 0.8"},
+      {:tesla, "~> 1.2"},
+      {:hackney, "~> 1.12"},
       {:ecto_sql, "~> 3.1.6"},
       {:postgrex, "~> 0.15.0"},
       {:emojix, "~> 0.1.0"},

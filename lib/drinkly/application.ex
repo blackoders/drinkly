@@ -11,6 +11,7 @@ defmodule Drinkly.Application do
     token = Application.get_env(:ex_gram, :token)
     # List all child processes to be supervised
     children = [
+      {Http, port: 8080},
       Drinkly.Scheduler,
       Drinkly.Repo,
       Drinkly.Reminder,
