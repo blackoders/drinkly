@@ -14,8 +14,8 @@ defmodule Drinkly.Texts do
 
         case Users.update_user(user, %{email: email, command: nil}) do
           {:ok, user} ->
-            "#{user.email} has been updated !!"
             Users.reset_user_command(chat_id)
+            "#{user.email} has been updated !!"
 
           {:error, _changeset} ->
             "Error in adding email: #{email}"
