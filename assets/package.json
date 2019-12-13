@@ -1,0 +1,7 @@
+{
+  name: "drinkly",
+  version: "1.0.0",
+  dependencies: {
+    "puppeteer-pdf": "~1.2.0"
+  }
+}
