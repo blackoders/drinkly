@@ -72,6 +72,7 @@ defmodule Drinkly.CommandHandler do
         """
         :alarm_clock:
         *Now Enter the time*
+
         _Examples: 1h 2hr 30min 30m 10sec 10s_
         """
       else
@@ -81,8 +82,11 @@ defmodule Drinkly.CommandHandler do
         """
         :alarm_clock:
         Reminder - *#{time}* has been updated
+
         *Focus on Your Work...*
+
         We'll remind you after *#{time}* to drink water *:droplet:*
+
         Use /myreminders to show your reminders
         """
 
