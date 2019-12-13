@@ -9,9 +9,21 @@ defmodule Drinkly.CallbackQuery do
   @report_html_template Application.get_env(:drinkly, :report_html_template) ||
                           Path.absname("templates/daily_report.html")
 
-  def execute(%{data: "remove_email", id: id, message: message}) do
+  def execute(%{data: "add_email", id: id, message: message, from: user}) do
+
+    Users.update_user_command(user.id, "setemail")
+
+    text = "Now Enter the email or /cancel to cancel adding email"
+    
+    ExGram.answer_callback_query(id)
+    delete_message(message)
+    ExGram.send_message(message.chat.id, text, [])
+  end
+
+  def execute(%{data: "remove_email", id: id, message: message, from: user}) do
+    email = Users.get_user_email!(user.id)
     keyboard_buttons = [
-      %{text: emoji(":heavy_check_mark: Delete Email"), callback_data: "confirm_remove_email"},
+      %{text: emoji(":heavy_check_mark: Delete Email #{email}"), callback_data: "confirm_remove_email"},
       %{text: emoji(":x: NO Keep Email"), callback_data: "cancel_remove_email"}
     ]
 
@@ -25,11 +37,17 @@ defmodule Drinkly.CallbackQuery do
     options = [reply_markup: reply_markup]
 
     ExGram.answer_callback_query(id)
-    ExGram.send_message(message.chat.id, "Are you sure about removing email", options)
+    delete_message(message)
+    text = """
+    Are you sure about removing email?
+    -> #{email}
+    """
+    ExGram.send_message(message.chat.id, text, options)
   end
 
   def execute(%{data: "confirm_remove_email", id: id, message: message, from: user}) do
-    ExGram.delete_message(message.chat.id, message.message_id)
+
+    delete_message(message)
 
     query_reply =
       try do
@@ -62,8 +80,7 @@ defmodule Drinkly.CallbackQuery do
   end
 
   def execute(%{data: "cancel_remove_email", id: id, message: message}) do
-    ExGram.delete_message(message.chat.id, message.message_id)
-
+    delete_message(message)
     ExGram.answer_callback_query(id,
       text: emoji(":ok: We don't touch Your email :ok_hand_tone2:"),
       show_alert: true
@@ -289,7 +306,8 @@ defmodule Drinkly.CallbackQuery do
 
   # -----O-----
   # keep this always at the end as it used for global matching
-  def execute(%{id: id}) do
+  def execute(%{id: id} = data) do
+    IO.inspect data, label: "data of a person"
     text = """
     :tools: Development in Progress...:bangbang:
 
