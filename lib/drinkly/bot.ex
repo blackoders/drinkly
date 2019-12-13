@@ -33,7 +33,7 @@ defmodule Drinkly.Bot do
 
   middleware(ExGram.Middleware.IgnoreUsername)
 
-  def handle({:command, :cancel, %{from: user}} = data, cnt) do
+  def handle({:command, :cancel, %{from: _user}} = data, cnt) do
     Drinkly.CommandHandler.handle_command(data, cnt)
   end
 

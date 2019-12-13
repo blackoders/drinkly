@@ -31,6 +31,8 @@ defmodule Drinkly.CommandHandler do
     Engineers are working on it :construction_worker:.
 
     Happy to serve you :exclamation:
+
+    /help to see available commands
     """
 
     message = Emojix.replace_by_char(welcome_message)

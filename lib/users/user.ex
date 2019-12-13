@@ -3,6 +3,7 @@ defmodule Drinkly.Users.User do
 
   alias Drinkly.Metrics.Metric
   alias Drinkly.Drinks.Drink
+  alias Drinkly.Subscriptions.Subscription
 
   import Ecto.Changeset
 
