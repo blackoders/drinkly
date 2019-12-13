@@ -324,6 +324,7 @@ defmodule Drinkly.CallbackQuery do
   defp create_report_task(drinks, user, title) do
     Task.start(fn ->
       report_files = Helper.generate_report(drinks, user, @report_html_template, "#{title}")
+      IO.inspect report_files, label: "THE REPORT FILES BABY"
       send_report(user.id, report_files)
     end)
   end
@@ -364,8 +365,17 @@ defmodule Drinkly.CallbackQuery do
   end
 
   defp send_report(chat_id, {pdf_file_path, html_template_file}) do
-    ExGram.send_document(chat_id, {:file, pdf_file_path})
-    File.rm(pdf_file_path)
-    File.rm(html_template_file)
+    if File.exists?(pdf_file_path) do
+      ExGram.send_document(chat_id, {:file, pdf_file_path})
+      File.rm(pdf_file_path)
+      File.rm(html_template_file)
+    else
+      text = """
+      We are unable to generate PDF :cry:
+      Sorry for the issue :(
+      """
+      |> emoji()
+      ExGram.send_message(chat_id, text, [])
+    end
   end
 end
