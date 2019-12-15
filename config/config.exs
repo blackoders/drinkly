@@ -3,6 +3,7 @@
 use Mix.Config
 
 config :drinkly, ecto_repos: [Drinkly.Repo]
+
 config :ex_gram, token: System.get_env("TELEGRAM_DRINKLY_BOT_TOKEN")
 
 

@@ -31,9 +31,10 @@ defmodule Drinkly.Helper do
     report_output_file_name = "#{file_name}.#{extension}"
 
     report_string = EEx.eval_file(report_html_template, drinks: drinks, user_name: name)
+    templates_dir = Path.join(:code.priv_dir(:drinkly), "assets/templates")
 
     html_template_file =
-      "templates"
+      templates_dir
       |> Path.absname()
       |> Path.join(report_output_file_name)
 
@@ -42,7 +43,9 @@ defmodule Drinkly.Helper do
     IO.write(report_file, report_string)
     File.close(report_file)
 
-    pdf_file_path = Path.absname("pdfs") |> Path.join("#{file_name}.pdf")
+    pdfs_dir = Path.join(:code.priv_dir(:drinkly), "assets/pdfs")
+
+    pdf_file_path = Path.join(pdfs_dir, "#{file_name}.pdf")
 
     PuppeteerPdf.Generate.from_file(html_template_file, pdf_file_path)
 

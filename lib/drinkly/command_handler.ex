@@ -41,7 +41,6 @@ defmodule Drinkly.CommandHandler do
   end
 
   def handle_command({:command, :report, data}, _cnt) do
-    IO.inspect System.cmd("whereis", ["puppeteer-pdf"]), label: "=============puppeteer-pdf============"
     chat = data.chat
 
     keyboard_buttons = [
