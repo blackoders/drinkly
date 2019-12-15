@@ -5,7 +5,7 @@ use Mix.Config
 config :drinkly, ecto_repos: [Drinkly.Repo]
 config :ex_gram, token: System.get_env("TELEGRAM_DRINKLY_BOT_TOKEN")
 
-config :puppeteer_pdf, exec_path: Path.absname("node_modules/.bin/puppeteer-pdf")
+config :puppeteer_pdf, exec_path: Path.absname("assets/node_modules/.bin/puppeteer-pdf")
 
 config :drinkly,
   report_html_template: Path.join(File.cwd!(), "templates/daily_report.html"),
