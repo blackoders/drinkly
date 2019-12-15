@@ -11,3 +11,9 @@ config :drinkly, Drinkly.Repo,
   hostname: System.get_env("DR_HOSTNAME")
 
 # write production grade code here
+#
+config :puppeteer_pdf, exec_path: "puppeteer-pdf"
+
+config :drinkly,
+  report_html_template: Path.join(File.cwd!(), "templates/daily_report.html"),
+  report_output_folder: Path.join(File.cwd!(), "pdfs")

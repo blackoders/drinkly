@@ -31,7 +31,8 @@ defmodule Drinkly.MixProject do
       {:ecto_sql, "~> 3.1.6"},
       {:postgrex, "~> 0.15.0"},
       {:emojix, "~> 0.1.0"},
-      {:puppeteer_pdf, "~> 1.0.3"},
+      # {:puppeteer_pdf, "~> 1.0.3"},
+      {:puppeteer_pdf, git: "https://gitlab.com/ahamtech/elixir/puppeteer-pdf"},
       {:quantum, "~> 2.3"},
       {:timex, "~> 3.5"},
       {:jason, "~> 1.0"}
