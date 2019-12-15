@@ -2,6 +2,7 @@
 /_build/
 /node_modules/
 /assets/node_modules/
+/priv/assets/node_modules/
 /drinkly_releases/
 
 # If you run "mix test --cover", coverage assets end up here.

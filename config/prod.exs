@@ -12,8 +12,8 @@ config :drinkly, Drinkly.Repo,
 
 # write production grade code here
 
-config :puppeteer_pdf, exec_path: "../../assets/node_modules/.bin/puppeteer-pdf"
+config :puppeteer_pdf, exec_path: "assets/node_modules/.bin/puppeteer-pdf"
 
 config :drinkly,
-  report_html_template: Path.join(File.cwd!(), "templates/daily_report.html"),
-  report_output_folder: Path.join(File.cwd!(), "pdfs")
+  report_html_template: "assets/templates/daily_report.html",
+  report_output_folder: "assets/pdfs"
