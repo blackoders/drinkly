@@ -47,7 +47,7 @@ defmodule Drinkly.Helper do
 
     pdf_file_path = Path.join(pdfs_dir, "#{file_name}.pdf")
 
-    PuppeteerPdf.Generate.from_file(html_template_file, pdf_file_path)
+    PuppeteerPdf.Generate.from_file(html_template_file, pdf_file_path, [timeout: 10000])
 
     {pdf_file_path, html_template_file}
   end
