@@ -13,5 +13,5 @@ config :drinkly, Drinkly.Repo,
 # write production grade code here
 
 config :puppeteer_pdf,
-  exec_path: Path.absname("priv/assets/node_modules/.bin/puppeteer-pdf")
+  exec_path: "priv/assets/node_modules/.bin/puppeteer-pdf"
 
