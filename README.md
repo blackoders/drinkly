@@ -1,6 +1,6 @@
-[# Drinkly](https://t.me/drinkly_bot)
+# [Drinkly](https://t.me/drinkly_bot)
 
-[![welcome image](priv/assets/images/welcome.png)](https://t.me/drinkly_bot)
+[![welcome image](priv/assets/images/drinkly_telgram_preview.png)](https://t.me/drinkly_bot)
 
 [Drinkly Bot ](https://t.me/drinkly_bot)  helps us to track the quantity of water we drink and remind us to drink water in right time.
 
@@ -10,7 +10,7 @@
 
 2. Log amount of daily drinking water.
 
-3. Touch to log each drinking.
+3. Report Generation (on going)
 
 4. Check glasses of water drunk each day.
 
@@ -22,7 +22,7 @@
 
 8. Show amount of glasses of water you have drunk one day on the icon.
 
-9. Email the data of date, amount of water to anyone you would like.       
+9. Email the data of date, amount of water to anyone you would like.(Under Development)       
 
 ## Facts
 We all know that water is essential to our health, 2/3 of body is consists of water, yet most of us unknowingly suffer from chronic dehydration, this is a underlying cause of many illnesses. To most of us, we are always too busy to drink water, or we only drink water when we feel thirsty, that’s too late if so, thirst is signal which our body warn us that our body have lost water balance, and the cells have already dehydrated to serious situation.
