@@ -37,8 +37,8 @@ defmodule Drinkly.Bot do
     Drinkly.CommandHandler.handle_command(data, cnt)
   end
 
-  def handle({:command, :start, %{from: _user}} = data, cnt) do
-      Drinkly.CommandHandler.handle_command(data, cnt)
+  def handle({:command, :start, %{from: user}} = data, cnt) do
+    Drinkly.CommandHandler.handle_command(data, cnt)
   end
 
   def handle({:command, command, %{from: user}} = data, cnt) do
@@ -48,9 +48,10 @@ defmodule Drinkly.Bot do
     else
       text = """
       Welcome to Drinkly Bot !
-      You need to run /start command for set up
+      You need to run /start command for initial setup
       Thank You :)
       """
+
       answer(cnt, text)
     end
   end

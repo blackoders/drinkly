@@ -74,6 +74,7 @@ defmodule Drinkly.Users do
     else
       Logger.error("Error in Chageset!")
       Logger.info("#{inspect(changeset.errors)}")
+      {:error, :nousercreated}
     end
   end
 
@@ -183,6 +184,6 @@ defmodule Drinkly.Users do
   end
 
   def exist?(id) do
-    !! Repo.get(User, id)
+    !!Repo.get(User, id)
   end
 end
