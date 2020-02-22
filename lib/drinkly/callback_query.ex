@@ -327,25 +327,10 @@ defmodule Drinkly.CallbackQuery do
   end
 
   defp create_report_task(drinks, user, title) do
-<<<<<<< HEAD
-    try do
-      Task.start(fn ->
-        report_html_template = Path.join(:code.priv_dir(:drinkly), "assets/templates/report.html")
-        report_files = Helper.generate_report(drinks, user, report_html_template, "#{title}")
-        send_report(user.id, report_files)
-      end)
-    catch 
-      err -> 
-        Logger.error("#{inspect err}")
-    end
-=======
-    IO.inspect(Path.absname("templates/daily_report.html"), label: "templates")
-
     Task.start(fn ->
       report_files = Helper.generate_report(drinks, user, @report_html_template, "#{title}")
       send_report(user.id, report_files)
     end)
->>>>>>> develop
   end
 
   defp send_pre_report_message(message, chat_id, message_id, title) do
