@@ -9,11 +9,10 @@ defmodule Drinkly.CallbackQuery do
   require Logger
 
   def execute(%{data: "add_email", id: id, message: message, from: user}) do
-
     Users.update_user_command(user.id, "setemail")
 
     text = "Now Enter the email or /cancel to cancel adding email"
-    
+
     ExGram.answer_callback_query(id)
     delete_message(message)
     ExGram.send_message(message.chat.id, text, [])
@@ -21,8 +20,12 @@ defmodule Drinkly.CallbackQuery do
 
   def execute(%{data: "remove_email", id: id, message: message, from: user}) do
     email = Users.get_user_email!(user.id)
+
     keyboard_buttons = [
-      %{text: emoji(":heavy_check_mark: Delete Email #{email}"), callback_data: "confirm_remove_email"},
+      %{
+        text: emoji(":heavy_check_mark: Delete Email #{email}"),
+        callback_data: "confirm_remove_email"
+      },
       %{text: emoji(":x: NO Keep Email"), callback_data: "cancel_remove_email"}
     ]
 
@@ -37,15 +40,16 @@ defmodule Drinkly.CallbackQuery do
 
     ExGram.answer_callback_query(id)
     delete_message(message)
+
     text = """
     Are you sure about removing email?
     -> #{email}
     """
+
     ExGram.send_message(message.chat.id, text, options)
   end
 
   def execute(%{data: "confirm_remove_email", id: id, message: message, from: user}) do
-
     delete_message(message)
 
     query_reply =
@@ -80,6 +84,7 @@ defmodule Drinkly.CallbackQuery do
 
   def execute(%{data: "cancel_remove_email", id: id, message: message}) do
     delete_message(message)
+
     ExGram.answer_callback_query(id,
       text: emoji(":ok: We don't touch Your email :ok_hand_tone2:"),
       show_alert: true
@@ -306,7 +311,8 @@ defmodule Drinkly.CallbackQuery do
   # -----O-----
   # keep this always at the end as it used for global matching
   def execute(%{id: id} = data) do
-    IO.inspect data, label: "data of a person"
+    IO.inspect(data, label: "data of a person")
+
     text = """
     :tools: Development in Progress...:bangbang:
 
@@ -321,6 +327,7 @@ defmodule Drinkly.CallbackQuery do
   end
 
   defp create_report_task(drinks, user, title) do
+<<<<<<< HEAD
     try do
       Task.start(fn ->
         report_html_template = Path.join(:code.priv_dir(:drinkly), "assets/templates/report.html")
@@ -331,6 +338,14 @@ defmodule Drinkly.CallbackQuery do
       err -> 
         Logger.error("#{inspect err}")
     end
+=======
+    IO.inspect(Path.absname("templates/daily_report.html"), label: "templates")
+
+    Task.start(fn ->
+      report_files = Helper.generate_report(drinks, user, @report_html_template, "#{title}")
+      send_report(user.id, report_files)
+    end)
+>>>>>>> develop
   end
 
   defp send_pre_report_message(message, chat_id, message_id, title) do
@@ -374,11 +389,13 @@ defmodule Drinkly.CallbackQuery do
       File.rm(pdf_file_path)
       File.rm(html_template_file)
     else
-      text = """
-      We are unable to generate PDF :cry:
-      Sorry for the issue :(
-      """
-      |> emoji()
+      text =
+        """
+        We are unable to generate PDF :cry:
+        Sorry for the issue :(
+        """
+        |> emoji()
+
       ExGram.send_message(chat_id, text, [])
     end
   end

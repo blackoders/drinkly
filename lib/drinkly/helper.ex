@@ -22,6 +22,8 @@ defmodule Drinkly.Helper do
   end
 
   def generate_report(drinks, user, report_html_template, type) do
+    IO.inspect(report_html_template, label: "----------report html temp----------")
+
     now = now() |> to_string()
     name = user.first_name
     extension = "html"

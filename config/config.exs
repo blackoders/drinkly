@@ -4,7 +4,11 @@ use Mix.Config
 
 config :drinkly, ecto_repos: [Drinkly.Repo]
 
+<<<<<<< HEAD
 config :ex_gram, token: System.get_env("TELEGRAM_DRINKLY_BOT_TOKEN")
+=======
+config :puppeteer_pdf, exec_path: Path.absname("priv/assets/node_modules/.bin/puppeteer-pdf")
+>>>>>>> develop
 
 
 # This configuration is loaded before any dependency and is restricted

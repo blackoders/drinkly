@@ -6,19 +6,36 @@ defmodule Drinkly.CommandHandler do
   alias Drinkly.Drinks
 
   def handle_command({:command, :start, %{from: user, chat: chat}}, _cnt) do
-    if ! Users.exist?(user) do
+    if !Users.exist?(user) do
       spawn(fn ->
         user =
-          user
-          |> Enum.map(fn
+          Map.new(user, fn
             {:id, id} -> {:user_id, id}
-            {:username, id} -> {:user_name, id}
+            {:first_name, id} -> {:user_name, id}
             rest -> rest
           end)
-          |> Enum.into(%{})
 
-        Users.create_user(user)
-        Users.reset_user_command(chat.id)
+        welcome_message =
+          case Users.create_user(user) do
+            {:ok, user} ->
+              """
+              Congratulations ::bangbang:
+              User Initial Setup Done :bangbang:
+              """
+
+              Users.reset_user_command(chat.id)
+
+            {:error, error} ->
+              """
+              Unable to Create user Setup :(
+              Sorry for inconvenience caused
+              Please Try again /start
+              """
+          end
+
+        message = Emojix.replace_by_char(welcome_message)
+
+        ExGram.send_message(chat.id, message)
       end)
     end
 
