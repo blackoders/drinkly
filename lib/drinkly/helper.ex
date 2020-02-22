@@ -22,7 +22,7 @@ defmodule Drinkly.Helper do
   end
 
   def generate_report(drinks, user, report_html_template, type) do
-    IO.inspect(report_html_template, label: "----------report html temp----------")
+    IO.inspect(report_html_template, label: "----------report tempalte----------")
 
     now = now() |> to_string()
     name = user.first_name
@@ -34,6 +34,8 @@ defmodule Drinkly.Helper do
 
     report_string = EEx.eval_file(report_html_template, drinks: drinks, user_name: name)
     templates_dir = Path.join(:code.priv_dir(:drinkly), "assets/templates")
+
+    IO.inspect(templates_dir, label: "----------templtedir----------")
 
     html_template_file =
       templates_dir
@@ -49,7 +51,7 @@ defmodule Drinkly.Helper do
 
     pdf_file_path = Path.join(pdfs_dir, "#{file_name}.pdf")
 
-    PuppeteerPdf.Generate.from_file(html_template_file, pdf_file_path, [timeout: 100000])
+    PuppeteerPdf.Generate.from_file(html_template_file, pdf_file_path, timeout: 100_000)
 
     {pdf_file_path, html_template_file}
   end

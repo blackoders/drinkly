@@ -6,6 +6,8 @@ defmodule Drinkly.CallbackQuery do
   alias Drinkly.Metrics
   alias Drinkly.Helper
 
+  @report_html_template Path.join(:code.priv_dir(:drinkly), "assets/templates/report.html")
+
   require Logger
 
   def execute(%{data: "add_email", id: id, message: message, from: user}) do
@@ -327,8 +329,10 @@ defmodule Drinkly.CallbackQuery do
   end
 
   defp create_report_task(drinks, user, title) do
+    report_html_template = Path.join(:code.priv_dir(:drinkly), "assets/templates/report.html")
+
     Task.start(fn ->
-      report_files = Helper.generate_report(drinks, user, @report_html_template, "#{title}")
+      report_files = Helper.generate_report(drinks, user, report_html_template, "#{title}")
       send_report(user.id, report_files)
     end)
   end
